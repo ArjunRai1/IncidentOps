@@ -3,15 +3,12 @@ spring:
     name: incidentops
   profiles:
     active: local
-
   jpa:
     open-in-view: false
     hibernate:
       ddl-auto: validate
-
   flyway:
     enabled: true
     locations: classpath:db/migration
-
 server:
   port: 8080

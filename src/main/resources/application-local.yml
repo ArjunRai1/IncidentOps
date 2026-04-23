@@ -1,12 +1,10 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/incidentops
+    url: jdbc:postgresql://localhost:5433/incidentops
     username: incidentopsuser
     password: arjun123
   jpa:
     hibernate:
       ddl-auto: validate
   flyway:
-    url: jdbc:postgresql://localhost:5432/incidentops
-    user: incidentopsuser
-    password: your_password
+    enabled: true

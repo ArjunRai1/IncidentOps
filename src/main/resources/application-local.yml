@@ -7,4 +7,6 @@ spring:
     hibernate:
       ddl-auto: validate
   flyway:
-    enabled: true
+    url: jdbc:postgresql://localhost:5432/incidentops
+    user: incidentopsuser
+    password: your_password

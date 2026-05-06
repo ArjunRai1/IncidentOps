@@ -12,3 +12,10 @@ spring:
     locations: classpath:db/migration
 server:
   port: 8080
+
+app:
+  auth:
+    jwt-secret: ${APP_AUTH_JWT_SECRET:change-this-secret-at-least-32-characters-long}
+    jwt-expiration-minutes: 60
+    otp-expiration-seconds: 120
+    otp-email-from: ${APP_AUTH_OTP_FROM:no-reply@incidentops.local}

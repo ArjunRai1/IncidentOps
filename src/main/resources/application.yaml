@@ -1,0 +1,11 @@
+spring:
+  application:
+    name:incident-ops
+server:
+  port:8080
+jwt:
+  secret: ${JWT_SECRET}
+  expiration-ms: ${JWT_EXPIRATION_MS:86400000} #Setting to 1 day currently
+logging:
+  level:
+    root: INFO

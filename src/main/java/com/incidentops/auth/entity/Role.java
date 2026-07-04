@@ -1,4 +1,4 @@
-package com.incidentops.entity;
+package com.incidentops.auth.entity;
 
 public enum Role {
     USER,

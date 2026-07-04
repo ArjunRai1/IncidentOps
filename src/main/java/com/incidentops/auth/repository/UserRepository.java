@@ -1,6 +1,6 @@
-package com.incidentops.repository;
+package com.incidentops.auth.repository;
 
-import com.incidentops.entity.User;
+import com.incidentops.auth.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

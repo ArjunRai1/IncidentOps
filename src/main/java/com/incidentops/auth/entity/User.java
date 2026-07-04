@@ -1,4 +1,4 @@
-package com.incidentops.entity;
+package com.incidentops.auth.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

@@ -1,6 +1,8 @@
 spring:
   application:
     name:incident-ops
+  profiles:
+    active: dev
 server:
   port:8080
 jwt:

@@ -1,10 +1,10 @@
-package com.incidentops.incidentops;
+package com.incidentops;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class IncidentopsApplicationTests {
+class ApplicationTests {
 
 	@Test
 	void contextLoads() {

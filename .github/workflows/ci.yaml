@@ -16,7 +16,7 @@ jobs:
           POSTGRES_USER: incidentops_user
           POSTGRES_PASSWORD: incidentops_pass
         ports:
-          - 5432:5432
+          - 5433:5432
         options: >-
           --health-cmd="pg_isready -U incidentops_user -d incident_ops"
           --health-interval=10s

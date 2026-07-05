@@ -53,6 +53,7 @@ public class User {
         user.setUsername(registration.getUsername());
         user.setEmail(registration.getEmail());
         user.setPassword(registration.getHashedPassword());
+        user.setRole(Role.USER);
         return user;
     }
 }

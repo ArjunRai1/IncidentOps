@@ -1,14 +1,14 @@
 package com.incidentops.auth.controller;
 
+import com.incidentops.auth.dto.LoginRequest;
+import com.incidentops.auth.dto.LoginResponse;
 import com.incidentops.auth.dto.RegisterRequest;
 import com.incidentops.auth.dto.VerifyOTPRequest;
 import com.incidentops.auth.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -29,5 +29,16 @@ public class AuthController {
     public ResponseEntity<String> verify(@Valid @RequestBody VerifyOTPRequest request){
         authService.verifyOtp(request);
         return ResponseEntity.ok("OTP verified successfully");
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+        System.out.println("LOGIN CONTROLLER");
+        return ResponseEntity.ok(authService.login(request));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<String> me(Authentication authentication) {
+        return ResponseEntity.ok(authentication.getName());
     }
 }

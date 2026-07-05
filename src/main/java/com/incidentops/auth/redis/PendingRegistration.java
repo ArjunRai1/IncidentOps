@@ -14,4 +14,5 @@ public class PendingRegistration {
     private String email;
     private String hashedPassword;
     private String otp;
+    private String role;
 }

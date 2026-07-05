@@ -1,7 +1,10 @@
 package com.incidentops.auth.service;
 
+import com.incidentops.auth.dto.LoginRequest;
+import com.incidentops.auth.dto.LoginResponse;
 import com.incidentops.auth.dto.RegisterRequest;
 import com.incidentops.auth.dto.VerifyOTPRequest;
+import com.incidentops.auth.entity.Role;
 import com.incidentops.auth.entity.User;
 import com.incidentops.auth.exception.EmailAlreadyExistsException;
 import com.incidentops.auth.exception.InvalidOtpException;
@@ -11,6 +14,11 @@ import com.incidentops.auth.mail.MailService;
 import com.incidentops.auth.otp.OtpGenerator;
 import com.incidentops.auth.redis.PendingRegistration;
 import com.incidentops.auth.repository.UserRepository;
+import com.incidentops.security.JwtService;
+import com.incidentops.security.UserPrincipal;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,12 +37,18 @@ public class AuthService {
 
     private final MailService mailService;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, OtpGenerator otpGenerator, PendingRegistrationService pendingRegistrationService, MailService mailService) {
+    private final AuthenticationManager authenticationManager;
+
+    private final JwtService jwtService;
+
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, OtpGenerator otpGenerator, PendingRegistrationService pendingRegistrationService, MailService mailService, AuthenticationManager authenticationManager, JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.otpGenerator = otpGenerator;
         this.pendingRegistrationService = pendingRegistrationService;
         this.mailService = mailService;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     public void register(RegisterRequest request){
@@ -47,7 +61,9 @@ public class AuthService {
         String hashedPassword = passwordEncoder.encode(request.getPassword());
         String otp = otpGenerator.generateOtp();
 
-        PendingRegistration registration = new PendingRegistration(request.getUsername(), request.getEmail(), hashedPassword, otp);
+        String role = String.valueOf(Role.USER);
+
+        PendingRegistration registration = new PendingRegistration(request.getUsername(), request.getEmail(), hashedPassword, otp, role);
         pendingRegistrationService.save(registration);
 
         mailService.sendOtp(registration.getEmail(), registration.getOtp());
@@ -71,6 +87,16 @@ public class AuthService {
         //Delete redis entry immediately
         pendingRegistrationService.delete(request.getEmail());
         System.out.println("User created successfully");
+    }
+
+    public LoginResponse login(LoginRequest request) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                                request.getEmail(), request.getPassword()));
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+
+        // JWT generation comes next
+        String token = jwtService.generateToken(principal);
+        return new LoginResponse(token);
     }
 
 

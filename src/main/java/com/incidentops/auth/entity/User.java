@@ -38,14 +38,14 @@ public class User {
 
     @PrePersist
     void onCreate() {
-        LocalDateTime now = LocalDateTime.now();;
+        LocalDateTime now = LocalDateTime.now();
         createdAt = now;
         updatedAt = now;
     }
 
     @PreUpdate
     void onUpdate() {
-        LocalDateTime now = LocalDateTime.now();;
+        updatedAt = LocalDateTime.now();
     }
 
     public static User from(PendingRegistration registration){

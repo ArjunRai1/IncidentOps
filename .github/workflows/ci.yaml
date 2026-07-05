@@ -20,7 +20,7 @@ jobs:
       MAIL_PASSWORD: dummy-password
 
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
-      JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION_MS }}
+      JWT_EXPIRATION_MS: ${{ secrets.JWT_EXPIRATION_MS }}
 
     services:
       postgres:

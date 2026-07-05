@@ -1,5 +1,6 @@
 package com.incidentops.auth.entity;
 
+import com.incidentops.auth.redis.PendingRegistration;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,5 +46,13 @@ public class User {
     @PreUpdate
     void onUpdate() {
         LocalDateTime now = LocalDateTime.now();;
+    }
+
+    public static User from(PendingRegistration registration){
+        User user = new User();
+        user.setUsername(registration.getUsername());
+        user.setEmail(registration.getEmail());
+        user.setPassword(registration.getHashedPassword());
+        return user;
     }
 }

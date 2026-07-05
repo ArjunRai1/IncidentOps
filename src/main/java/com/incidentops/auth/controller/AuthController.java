@@ -1,6 +1,7 @@
 package com.incidentops.auth.controller;
 
 import com.incidentops.auth.dto.RegisterRequest;
+import com.incidentops.auth.dto.VerifyOTPRequest;
 import com.incidentops.auth.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -22,5 +23,11 @@ public class AuthController {
     public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request){
         authService.register(request);
         return ResponseEntity.ok("OTP sent successfully");
+    }
+
+    @PostMapping("/verify")
+    public ResponseEntity<String> verify(@Valid @RequestBody VerifyOTPRequest request){
+        authService.verifyOtp(request);
+        return ResponseEntity.ok("OTP verified successfully");
     }
 }

@@ -19,8 +19,8 @@ jobs:
       MAIL_USERNAME: dummy@example.com
       MAIL_PASSWORD: dummy-password
 
-      JWT_SECRET: test-secret-for-ci-only
-      JWT_EXPIRATION: 3600000
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION_MS }}
 
     services:
       postgres:

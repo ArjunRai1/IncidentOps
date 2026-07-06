@@ -3,6 +3,7 @@ package com.incidentops.incident.dto;
 import com.incidentops.auth.entity.User;
 import com.incidentops.incident.entity.IncidentPriority;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -18,7 +19,7 @@ public class CreateIncidentRequest {
     @NotBlank
     private String description;
 
-    @Pattern(regexp = "ADMIN|USER", message = "Must be ADMIN or USER")
+    @NotNull
     private IncidentPriority priority;
 
     private Long assignedTo;

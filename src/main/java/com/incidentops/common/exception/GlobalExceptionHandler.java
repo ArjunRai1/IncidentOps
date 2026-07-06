@@ -4,6 +4,7 @@ import com.incidentops.auth.exception.EmailAlreadyExistsException;
 import com.incidentops.auth.exception.InvalidOtpException;
 import com.incidentops.auth.exception.RegistrationExpiredException;
 import com.incidentops.auth.exception.UsernameAlreadyExistsException;
+import com.incidentops.incident.exception.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,5 +56,16 @@ public class GlobalExceptionHandler {
                 request.getRequestURI()
         );
         return ResponseEntity.status(HttpStatus.GONE).body(response);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFound(UserNotFoundException ex, HttpServletRequest request){
+       ErrorResponse response = new ErrorResponse(
+               LocalDateTime.now(),
+               HttpStatus.NOT_FOUND.value(),
+               ex.getMessage(),
+               request.getRequestURI()
+       );
+       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 }

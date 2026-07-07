@@ -8,9 +8,15 @@ import com.incidentops.incident.entity.Incident;
 import com.incidentops.incident.entity.IncidentStatus;
 import com.incidentops.incident.exception.UserNotFoundException;
 import com.incidentops.incident.repository.IncidentRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.Set;
 
 @Service
 public class IncidentService {
@@ -60,5 +66,24 @@ public class IncidentService {
             response.setAssignedTo(incident.getAssignedTo().getUsername());
         }
         return response;
+    }
+    private static final Set<String> ALLOWED_SORT_FIELDS = Set.of(
+            "createdAt",
+            "updatedAt",
+            "priority",
+            "status",
+            "title"
+    );
+    public Page<IncidentResponse> getAllIncidents(int page, int size, String sortBy, String direction){
+        if (!ALLOWED_SORT_FIELDS.contains(sortBy)) {
+            throw new IllegalArgumentException("Invalid sort field");
+        }
+        if (!direction.equalsIgnoreCase("asc") && !direction.equalsIgnoreCase("desc")) {
+            throw new IllegalArgumentException("Invalid direction for sort");
+        }
+        Sort sort = (direction.equalsIgnoreCase("asc")) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Incident> incidents = incidentRepository.findAll(pageable);
+        return incidents.map(this::mapToResponse);
     }
 }

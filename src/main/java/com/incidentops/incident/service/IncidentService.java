@@ -5,13 +5,16 @@ import com.incidentops.auth.repository.UserRepository;
 import com.incidentops.incident.dto.CreateIncidentRequest;
 import com.incidentops.incident.dto.IncidentResponse;
 import com.incidentops.incident.entity.Incident;
+import com.incidentops.incident.entity.IncidentPriority;
 import com.incidentops.incident.entity.IncidentStatus;
 import com.incidentops.incident.exception.UserNotFoundException;
 import com.incidentops.incident.repository.IncidentRepository;
+import com.incidentops.incident.specification.IncidentSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -74,7 +77,7 @@ public class IncidentService {
             "status",
             "title"
     );
-    public Page<IncidentResponse> getAllIncidents(int page, int size, String sortBy, String direction){
+    public Page<IncidentResponse> getAllIncidents(int page, int size, String sortBy, String direction, IncidentStatus status, IncidentPriority priority){
         if (!ALLOWED_SORT_FIELDS.contains(sortBy)) {
             throw new IllegalArgumentException("Invalid sort field");
         }
@@ -83,7 +86,20 @@ public class IncidentService {
         }
         Sort sort = (direction.equalsIgnoreCase("asc")) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
-        Page<Incident> incidents = incidentRepository.findAll(pageable);
+
+        //Building query fragments using specification
+        Specification<Incident> specification = Specification.unrestricted();
+
+        //Resembles and clause in normal sql query(and status="...")
+        if (status != null) {
+            specification = specification.and(IncidentSpecification.hasStatus(status));
+        }
+
+        if (priority != null) {
+            specification = specification.and(IncidentSpecification.hasPriority(priority));
+        }
+
+        Page<Incident> incidents = incidentRepository.findAll(specification, pageable);
         return incidents.map(this::mapToResponse);
     }
 }

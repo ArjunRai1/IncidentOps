@@ -2,6 +2,8 @@ package com.incidentops.incident.controller;
 
 import com.incidentops.incident.dto.CreateIncidentRequest;
 import com.incidentops.incident.dto.IncidentResponse;
+import com.incidentops.incident.entity.IncidentPriority;
+import com.incidentops.incident.entity.IncidentStatus;
 import com.incidentops.incident.service.IncidentService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -29,8 +31,8 @@ public class IncidentController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<IncidentResponse>> getAllIncidents(@RequestParam(defaultValue="0") @Min(0) int page, @RequestParam(defaultValue="10") @Min(1) @Max(50) int size, @RequestParam(defaultValue = "createdAt") String sortBy, @RequestParam(defaultValue = "desc") String direction){
-        Page<IncidentResponse> response = incidentService.getAllIncidents(page, size);
+    public ResponseEntity<Page<IncidentResponse>> getAllIncidents(@RequestParam(defaultValue="0") @Min(0) int page, @RequestParam(defaultValue="10") @Min(1) @Max(50) int size, @RequestParam(defaultValue = "createdAt") String sortBy, @RequestParam(defaultValue = "desc") String direction, @RequestParam(required = false) IncidentStatus status, @RequestParam(required = false) IncidentPriority priority){
+        Page<IncidentResponse> response = incidentService.getAllIncidents(page, size, sortBy, direction, status, priority);
         return ResponseEntity.ok(response);
     }
 }

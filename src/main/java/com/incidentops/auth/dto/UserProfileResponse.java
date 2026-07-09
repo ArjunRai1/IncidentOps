@@ -1,0 +1,16 @@
+package com.incidentops.auth.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserProfileResponse {
+    Long id;
+    String email;
+    String role;
+}

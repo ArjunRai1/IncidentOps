@@ -14,3 +14,8 @@ export const verifyOtp = async (data) => {
     const response = await api.post("/auth/verify", data);
     return response.data;
 };
+
+export const getCurrentUser = async () => {
+    const response = await api.get("/auth/me");
+    return response.data;
+};

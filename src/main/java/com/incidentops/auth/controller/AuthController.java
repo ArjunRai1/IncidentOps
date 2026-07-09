@@ -1,9 +1,7 @@
 package com.incidentops.auth.controller;
 
-import com.incidentops.auth.dto.LoginRequest;
-import com.incidentops.auth.dto.LoginResponse;
-import com.incidentops.auth.dto.RegisterRequest;
-import com.incidentops.auth.dto.VerifyOTPRequest;
+import com.incidentops.auth.dto.*;
+import com.incidentops.auth.entity.User;
 import com.incidentops.auth.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +36,8 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<String> me(Authentication authentication) {
-        return ResponseEntity.ok(authentication.getName());
+    public ResponseEntity<UserProfileResponse> getCurrentUser(Authentication authentication) {
+        UserProfileResponse response = authService.getCurrentUser(authentication.getName());
+        return ResponseEntity.ok(response);
     }
 }

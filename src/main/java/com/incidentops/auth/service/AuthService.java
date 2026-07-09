@@ -1,9 +1,6 @@
 package com.incidentops.auth.service;
 
-import com.incidentops.auth.dto.LoginRequest;
-import com.incidentops.auth.dto.LoginResponse;
-import com.incidentops.auth.dto.RegisterRequest;
-import com.incidentops.auth.dto.VerifyOTPRequest;
+import com.incidentops.auth.dto.*;
 import com.incidentops.auth.entity.Role;
 import com.incidentops.auth.entity.User;
 import com.incidentops.auth.exception.EmailAlreadyExistsException;
@@ -14,6 +11,7 @@ import com.incidentops.auth.mail.MailService;
 import com.incidentops.auth.otp.OtpGenerator;
 import com.incidentops.auth.redis.PendingRegistration;
 import com.incidentops.auth.repository.UserRepository;
+import com.incidentops.incident.exception.UserNotFoundException;
 import com.incidentops.security.JwtService;
 import com.incidentops.security.UserPrincipal;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -99,5 +97,15 @@ public class AuthService {
         return new LoginResponse(token);
     }
 
+    public UserProfileResponse getCurrentUser(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException());
+
+        UserProfileResponse response = new UserProfileResponse();
+        response.setId(user.getId());
+        response.setEmail(user.getEmail());
+        response.setRole(user.getRole().name());
+
+        return response;
+    }
 
 }

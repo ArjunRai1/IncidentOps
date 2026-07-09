@@ -8,6 +8,7 @@ import EditIncident from "../pages/EditIncident";
 import IncidentDetails from "../pages/IncidentDetails";
 import Profile from "../pages/Profile";
 import ProtectedRoute from "./ProtectedRoute";
+import DashboardLayout from "../layouts/DashboardLayout";
 
 export default function AppRoutes() {
     return (
@@ -17,12 +18,14 @@ export default function AppRoutes() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route element={<ProtectedRoute />}>
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/incidents" element={<IncidentList />} />
-                    <Route path="/incidents/create" element={<CreateIncident />} />
-                    <Route path="/incidents/:id" element={<IncidentDetails />} />
-                    <Route path="/incidents/:id/edit" element={<EditIncident />} />
-                    <Route path="/profile" element={<Profile />} />
+                    <Route element={<DashboardLayout />}>
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/incidents" element={<IncidentList />} />
+                        <Route path="/incidents/create" element={<CreateIncident />} />
+                        <Route path="/incidents/:id" element={<IncidentDetails />} />
+                        <Route path="/incidents/:id/edit" element={<EditIncident />} />
+                        <Route path="/profile" element={<Profile />} />
+                    </Route>
                 </Route>
             </Routes>
         </BrowserRouter>

@@ -37,6 +37,12 @@ public class IncidentController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<IncidentResponse> getIncidentById(@PathVariable Long id) {
+        IncidentResponse response = incidentService.getIncidentById(id);
+        return ResponseEntity.ok(response);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<IncidentResponse> updateIncident(@Valid @RequestBody UpdateIncidentRequest request, @PathVariable Long id){
         IncidentResponse response = incidentService.updateIncident(request, id);

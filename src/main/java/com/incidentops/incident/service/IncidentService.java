@@ -142,6 +142,11 @@ public class IncidentService {
         return incidents.map(this::mapToResponse);
     }
 
+    public IncidentResponse getIncidentById(Long id) {
+        Incident incident = incidentRepository.findById(id).orElseThrow(()-> new IncidentNotFoundException());
+        return mapToResponse(incident);
+    }
+
     public IncidentResponse updateIncident(UpdateIncidentRequest request, Long id){
         boolean detailsUpdated = false;
         User currentUser = getCurrentUser();

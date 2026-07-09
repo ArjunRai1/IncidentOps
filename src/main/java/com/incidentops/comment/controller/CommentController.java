@@ -25,7 +25,7 @@ public class CommentController{
     }
 
     @GetMapping
-    public ResponseEntity<List<CommentResponse>> getComments(@PathVariable Long incidentId, @RequestParam(defaultValue = "asc") String direction){
+    public ResponseEntity<List<CommentResponse>> getComments(@PathVariable Long incidentId, @RequestParam(defaultValue = "desc") String direction){
         List<CommentResponse> response = commentService.getComments(incidentId, direction);
         return ResponseEntity.ok(response);
     }

@@ -31,8 +31,8 @@ public class IncidentController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<IncidentResponse>> getAllIncidents(@RequestParam(defaultValue="0") @Min(0) int page, @RequestParam(defaultValue="10") @Min(1) @Max(50) int size, @RequestParam(defaultValue = "createdAt") String sortBy, @RequestParam(defaultValue = "desc") String direction, @RequestParam(required = false) IncidentStatus status, @RequestParam(required = false) IncidentPriority priority){
-        Page<IncidentResponse> response = incidentService.getAllIncidents(page, size, sortBy, direction, status, priority);
+    public ResponseEntity<Page<IncidentResponse>> getAllIncidents(@RequestParam(defaultValue="0") @Min(0) int page, @RequestParam(defaultValue="10") @Min(1) @Max(50) int size, @RequestParam(defaultValue = "createdAt") String sortBy, @RequestParam(defaultValue = "desc") String direction, @RequestParam(required = false) IncidentStatus status, @RequestParam(required = false) IncidentPriority priority, @RequestParam(required=false) String title){
+        Page<IncidentResponse> response = incidentService.getAllIncidents(page, size, sortBy, direction, status, priority, title);
         return ResponseEntity.ok(response);
     }
 }

@@ -77,7 +77,7 @@ public class IncidentService {
             "status",
             "title"
     );
-    public Page<IncidentResponse> getAllIncidents(int page, int size, String sortBy, String direction, IncidentStatus status, IncidentPriority priority){
+    public Page<IncidentResponse> getAllIncidents(int page, int size, String sortBy, String direction, IncidentStatus status, IncidentPriority priority, String title){
         if (!ALLOWED_SORT_FIELDS.contains(sortBy)) {
             throw new IllegalArgumentException("Invalid sort field");
         }
@@ -97,6 +97,10 @@ public class IncidentService {
 
         if (priority != null) {
             specification = specification.and(IncidentSpecification.hasPriority(priority));
+        }
+
+        if(title!=null){
+            specification = specification.and(IncidentSpecification.hasTitle(title));
         }
 
         Page<Incident> incidents = incidentRepository.findAll(specification, pageable);

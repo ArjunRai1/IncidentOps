@@ -16,10 +16,10 @@ public class CreateIncidentRequest {
     @Size(min=1, max=200)
     private String title;
 
-    @NotBlank
+    @NotBlank(message = "Description is required")
     private String description;
 
-    @NotNull
+    @NotNull(message = "Priority is required")
     private IncidentPriority priority;
 
     private Long assignedTo;

@@ -14,6 +14,7 @@ public class UpdateIncidentRequest {
     @Size(min=1, max=200)
     private String title;
 
+    @Size(max = 5000, message = "Description cannot exceed 5000 characters")
     private String description;
 
     private Long assignedTo;

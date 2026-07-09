@@ -1,5 +1,7 @@
 package com.incidentops.comment.service;
 
+import com.incidentops.audit.entity.Action;
+import com.incidentops.audit.service.AuditService;
 import com.incidentops.auth.entity.User;
 import com.incidentops.auth.repository.UserRepository;
 import com.incidentops.comment.dto.CommentResponse;
@@ -22,11 +24,13 @@ public class CommentService {
     private final IncidentRepository incidentRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+    private final AuditService auditService;
 
-    public CommentService(IncidentRepository incidentRepository, UserRepository userRepository, CommentRepository commentRepository) {
+    public CommentService(IncidentRepository incidentRepository, UserRepository userRepository, CommentRepository commentRepository, AuditService auditService) {
         this.incidentRepository = incidentRepository;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
+        this.auditService = auditService;
     }
 
     private User getCurrentUser() {
@@ -52,6 +56,7 @@ public class CommentService {
         comment.setComment(request.getComment());
         comment.setIncident(incident);
         comment.setUser(user);
+        auditService.log(incident, user, Action.COMMENT_ADDED, "New comment added");
         return mapToResponse(commentRepository.save(comment));
     }
 

@@ -1,5 +1,7 @@
 package com.incidentops.incident.service;
 
+import com.incidentops.audit.entity.Action;
+import com.incidentops.audit.service.AuditService;
 import com.incidentops.auth.entity.User;
 import com.incidentops.auth.repository.UserRepository;
 import com.incidentops.incident.dto.CreateIncidentRequest;
@@ -29,10 +31,12 @@ import java.util.Set;
 public class IncidentService {
     private final IncidentRepository incidentRepository;
     private final UserRepository userRepository;
+    private final AuditService auditService;
 
-    public IncidentService(IncidentRepository incidentRepository, UserRepository userRepository) {
+    public IncidentService(IncidentRepository incidentRepository, UserRepository userRepository, AuditService auditService) {
         this.incidentRepository = incidentRepository;
         this.userRepository = userRepository;
+        this.auditService = auditService;
     }
 
     public IncidentResponse createIncident(CreateIncidentRequest request) {
@@ -48,6 +52,7 @@ public class IncidentService {
             incident.setAssignedTo(assignee);
         }
         Incident savedIncident = incidentRepository.save(incident);
+        auditService.log(savedIncident, currentUser, Action.INCIDENT_CREATED, "Incident created");
         IncidentResponse mappedResponse = mapToResponse(savedIncident);
         return mappedResponse;
     }
@@ -138,29 +143,40 @@ public class IncidentService {
     }
 
     public IncidentResponse updateIncident(UpdateIncidentRequest request, Long id){
+        boolean detailsUpdated = false;
+        User currentUser = getCurrentUser();
         Incident incident = incidentRepository.findById(id).orElseThrow(()-> new IncidentNotFoundException());
         if (request.getTitle() != null) {
             incident.setTitle(request.getTitle());
+            detailsUpdated = true;
         }
 
         if (request.getDescription() != null) {
             incident.setDescription(request.getDescription());
+            detailsUpdated = true;
         }
 
         if(request.getPriority() != null && request.getPriority() != incident.getPriority()){
+            IncidentPriority oldPriority = incident.getPriority();
             incident.setPriority(request.getPriority());
+            auditService.log(incident, currentUser, Action.PRIORITY_CHANGED, "Priority changed from " + oldPriority + " to " + request.getPriority());
         }
 
         if(request.getAssignedTo() != null){
             User assignee = userRepository.findById(request.getAssignedTo()).orElseThrow(() -> new UserNotFoundException());
             incident.setAssignedTo(assignee);
+            auditService.log(incident, currentUser, Action.ASSIGNEE_CHANGED, "Assigned to " + assignee.getEmail());
         }
 
         if (request.getStatus() != null && request.getStatus() != incident.getStatus()) {
             validateStatusTransition(incident.getStatus(), request.getStatus());
+            IncidentStatus oldStatus = incident.getStatus();
             incident.setStatus(request.getStatus());
+            auditService.log(incident, currentUser, Action.STATUS_CHANGED, "Status changed from " + oldStatus + " to " + request.getStatus());
         }
-
+        if(detailsUpdated){
+            auditService.log(incident, currentUser, Action.INCIDENT_UPDATED, "Incident details updated");
+        }
         return mapToResponse(incidentRepository.save(incident));
     }
 }

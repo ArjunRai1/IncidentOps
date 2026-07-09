@@ -4,9 +4,11 @@ import com.incidentops.auth.entity.User;
 import com.incidentops.auth.repository.UserRepository;
 import com.incidentops.incident.dto.CreateIncidentRequest;
 import com.incidentops.incident.dto.IncidentResponse;
+import com.incidentops.incident.dto.UpdateIncidentRequest;
 import com.incidentops.incident.entity.Incident;
 import com.incidentops.incident.entity.IncidentPriority;
 import com.incidentops.incident.entity.IncidentStatus;
+import com.incidentops.incident.exception.IncidentNotFoundException;
 import com.incidentops.incident.exception.UserNotFoundException;
 import com.incidentops.incident.repository.IncidentRepository;
 import com.incidentops.incident.specification.IncidentSpecification;
@@ -19,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -105,5 +108,27 @@ public class IncidentService {
 
         Page<Incident> incidents = incidentRepository.findAll(specification, pageable);
         return incidents.map(this::mapToResponse);
+    }
+
+    public IncidentResponse updateIncident(UpdateIncidentRequest request, Long id){
+        Incident incident = incidentRepository.findById(id).orElseThrow(()-> new IncidentNotFoundException());
+        if (request.getTitle() != null) {
+            incident.setTitle(request.getTitle());
+        }
+
+        if (request.getDescription() != null) {
+            incident.setDescription(request.getDescription());
+        }
+
+        if(request.getPriority() != null){
+            incident.setPriority(request.getPriority());
+        }
+
+        if(request.getAssignedTo() != null){
+            User assignee = userRepository.findById(request.getAssignedTo()).orElseThrow(() -> new UserNotFoundException());
+            incident.setAssignedTo(assignee);
+        }
+
+        return mapToResponse(incidentRepository.save(incident));
     }
 }

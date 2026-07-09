@@ -4,6 +4,7 @@ import com.incidentops.auth.exception.EmailAlreadyExistsException;
 import com.incidentops.auth.exception.InvalidOtpException;
 import com.incidentops.auth.exception.RegistrationExpiredException;
 import com.incidentops.auth.exception.UsernameAlreadyExistsException;
+import com.incidentops.comment.exception.IncidentDoesNotExistException;
 import com.incidentops.incident.exception.IncidentNotFoundException;
 import com.incidentops.incident.exception.InvalidStatusTransitionException;
 import com.incidentops.incident.exception.UserNotFoundException;
@@ -91,5 +92,16 @@ public class GlobalExceptionHandler {
                 request.getRequestURI()
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(IncidentDoesNotExistException.class)
+    public ResponseEntity<ErrorResponse> handleIncidentDoesNotExist(IncidentDoesNotExistException ex, HttpServletRequest request){
+        ErrorResponse response = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 }

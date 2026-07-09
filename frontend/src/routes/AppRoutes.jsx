@@ -9,7 +9,7 @@ import IncidentDetails from "../pages/IncidentDetails";
 import Profile from "../pages/Profile";
 import ProtectedRoute from "./ProtectedRoute";
 import DashboardLayout from "../layouts/DashboardLayout";
-
+import VerifyOtp from "../pages/VerifyOtp";
 export default function AppRoutes() {
     return (
         <BrowserRouter>
@@ -17,6 +17,7 @@ export default function AppRoutes() {
                 <Route path="/" element={<Navigate to="/login" replace />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/verify" element={<VerifyOtp />} />
                 <Route element={<ProtectedRoute />}>
                     <Route element={<DashboardLayout />}>
                         <Route path="/dashboard" element={<Dashboard />} />

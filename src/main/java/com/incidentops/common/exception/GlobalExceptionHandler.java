@@ -5,6 +5,7 @@ import com.incidentops.auth.exception.InvalidOtpException;
 import com.incidentops.auth.exception.RegistrationExpiredException;
 import com.incidentops.auth.exception.UsernameAlreadyExistsException;
 import com.incidentops.incident.exception.IncidentNotFoundException;
+import com.incidentops.incident.exception.InvalidStatusTransitionException;
 import com.incidentops.incident.exception.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -79,5 +80,16 @@ public class GlobalExceptionHandler {
                request.getRequestURI()
        );
        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(InvalidStatusTransitionException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidStatusTransition(InvalidStatusTransitionException ex, HttpServletRequest request){
+        ErrorResponse response = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 }

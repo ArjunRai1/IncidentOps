@@ -2,7 +2,7 @@ package com.incidentops.incident.entity;
 
 public enum IncidentStatus {
     OPEN,
-    INVESTIGATING,
-    RESOLVED,
+    IN_PROGRESS,
+    TESTING,
     CLOSED
 }

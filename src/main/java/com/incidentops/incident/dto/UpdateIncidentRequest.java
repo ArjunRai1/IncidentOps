@@ -1,6 +1,7 @@
 package com.incidentops.incident.dto;
 
 import com.incidentops.incident.entity.IncidentPriority;
+import com.incidentops.incident.entity.IncidentStatus;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,4 +19,6 @@ public class UpdateIncidentRequest {
     private Long assignedTo;
 
     private IncidentPriority priority;
+
+    private IncidentStatus status;
 }

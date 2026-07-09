@@ -9,6 +9,7 @@ import com.incidentops.incident.entity.Incident;
 import com.incidentops.incident.entity.IncidentPriority;
 import com.incidentops.incident.entity.IncidentStatus;
 import com.incidentops.incident.exception.IncidentNotFoundException;
+import com.incidentops.incident.exception.InvalidStatusTransitionException;
 import com.incidentops.incident.exception.UserNotFoundException;
 import com.incidentops.incident.repository.IncidentRepository;
 import com.incidentops.incident.specification.IncidentSpecification;
@@ -80,6 +81,32 @@ public class IncidentService {
             "status",
             "title"
     );
+
+    private void validateStatusTransition(IncidentStatus current, IncidentStatus next){
+        switch(current){
+            case OPEN:
+                if(next != IncidentStatus.IN_PROGRESS){
+                    throw new InvalidStatusTransitionException();
+                }
+                break;
+            case IN_PROGRESS:
+                if(next != IncidentStatus.TESTING) {
+                    throw new InvalidStatusTransitionException();
+                }
+                break;
+            case TESTING:
+                if(next != IncidentStatus.IN_PROGRESS && next != IncidentStatus.CLOSED){
+                    throw new InvalidStatusTransitionException();
+                }
+                break;
+            case CLOSED:
+                if(next != IncidentStatus.OPEN){
+                    throw new InvalidStatusTransitionException();
+                }
+                break;
+        }
+    }
+
     public Page<IncidentResponse> getAllIncidents(int page, int size, String sortBy, String direction, IncidentStatus status, IncidentPriority priority, String title){
         if (!ALLOWED_SORT_FIELDS.contains(sortBy)) {
             throw new IllegalArgumentException("Invalid sort field");
@@ -120,13 +147,18 @@ public class IncidentService {
             incident.setDescription(request.getDescription());
         }
 
-        if(request.getPriority() != null){
+        if(request.getPriority() != null && request.getPriority() != incident.getPriority()){
             incident.setPriority(request.getPriority());
         }
 
         if(request.getAssignedTo() != null){
             User assignee = userRepository.findById(request.getAssignedTo()).orElseThrow(() -> new UserNotFoundException());
             incident.setAssignedTo(assignee);
+        }
+
+        if (request.getStatus() != null && request.getStatus() != incident.getStatus()) {
+            validateStatusTransition(incident.getStatus(), request.getStatus());
+            incident.setStatus(request.getStatus());
         }
 
         return mapToResponse(incidentRepository.save(incident));

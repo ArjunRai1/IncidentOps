@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import Card from "../common/Card";
 import Badge from "../common/Badge";
-import {formatDate,getSeverityVariant,getStatusVariant} from "../../utils/formatters";
+import {formatDate,getPriorityVariant,getStatusVariant} from "../../utils/formatters";
 
 export default function IncidentCard({ incident }) {
     const navigate = useNavigate();
@@ -18,8 +18,8 @@ export default function IncidentCard({ incident }) {
                     <Badge variant={getStatusVariant(incident.status)}>
                         {incident.status}
                     </Badge>
-                    <Badge variant={getSeverityVariant(incident.severity)}>
-                        {incident.severity}
+                    <Badge variant={getPriorityVariant(incident.priority)}>
+                        {incident.priority}
                     </Badge>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 export const getStatusVariant = (status) => {
-    switch (status) {
+    switch(status){
         case "OPEN":
             return "open";
         case "IN_PROGRESS":
@@ -11,8 +11,8 @@ export const getStatusVariant = (status) => {
     }
 };
 
-export const getSeverityVariant = (severity) => {
-    switch (severity) {
+export const getPriorityVariant = (priority) => {
+    switch(priority){
         case "HIGH":
             return "high";
         case "MEDIUM":

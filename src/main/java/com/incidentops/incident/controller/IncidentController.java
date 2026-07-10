@@ -16,7 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/incidents")
+@RequestMapping("/api/v1/incidents")
 @Validated
 public class IncidentController {
     private final IncidentService incidentService;

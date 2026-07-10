@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/incidents/{incidentId}/timeline")
+@RequestMapping("/api/v1/incidents/{incidentId}/timeline")
 public class AuditController {
 
     private final AuditService auditService;

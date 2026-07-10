@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/incidents/{incidentId}/comments")
+@RequestMapping("/api/v1/incidents/{incidentId}/comments")
 public class CommentController{
     private final CommentService commentService;
     public CommentController(CommentService commentService){

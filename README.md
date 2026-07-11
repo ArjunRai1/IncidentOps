@@ -1,6 +1,6 @@
 # IncidentOps
 
-IncidentOps is a full-stack incident management system built using Spring Boot and React. It provides authentication, incident lifecycle management, comments, timeline tracking and lays the foundation for AI-assisted incident analysis.
+IncidentOps is a production ready full-stack incident management system built using Spring Boot and React. It provides authentication, incident lifecycle management, comments, timeline tracking and lays the foundation for AI-assisted incident analysis.
 
 ---
 

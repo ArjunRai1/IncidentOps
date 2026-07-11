@@ -1,0 +1,73 @@
+import { useEffect, useState } from "react";
+
+import { getTimeline } from "../../api/timelineApi";
+
+import Card from "../common/Card";
+import Loader from "../common/Loader";
+import EmptyState from "../common/EmptyState";
+
+import { formatDate } from "../../utils/formatters";
+
+export default function TimelineSection({ incidentId }) {
+    const [events, setEvents] = useState([]);
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        loadTimeline();
+    }, [incidentId]);
+
+    const loadTimeline = async () => {
+        try {
+            setLoading(true);
+            setError("");
+
+            const data = await getTimeline(incidentId);
+
+            setEvents(data);
+        } catch (err) {
+            setError(
+                err.response?.data?.message ??
+                "Failed to load timeline."
+            );
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <Card>
+
+            <h2 className="mb-6 text-xl font-semibold">Timeline</h2>
+            {loading && <Loader />}
+
+            {!loading && error && (
+                <div className="rounded-md border border-red-200 bg-red-50 p-4 text-red-700">
+                    {error}
+                </div>
+            )}
+
+            {!loading &&
+                !error &&
+                events.length === 0 && (
+                    <EmptyState title="No Timeline" message="No activity has been recorded yet."/>
+                )}
+
+            <div className="space-y-4">
+
+                {events.map((event) => (
+                    <Card key={event.id}>
+                        <div className="flex items-center justify-between">
+                            <span className="font-semibold">{event.eventType}</span>
+                            <span className="text-sm text-gray-500">{formatDate(event.createdAt)}</span>
+                        </div>
+                        {event.description && (
+                            <p className="mt-3 text-gray-700">{event.description}</p>
+                        )}
+                    </Card>
+                ))}
+            </div>
+        </Card>
+    );
+}

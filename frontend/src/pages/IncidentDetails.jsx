@@ -7,6 +7,9 @@ import Card from "../components/common/Card";
 import Loader from "../components/common/Loader";
 import Badge from "../components/common/Badge";
 
+import CommentsSection from "../components/incidents/CommentSection";
+import TimelineSection from "../components/incidents/TimelineSection";
+
 import {formatDate, getPriorityVariant, getStatusVariant} from "../utils/formatters";
 
 export default function IncidentDetails() {
@@ -188,6 +191,10 @@ export default function IncidentDetails() {
                     </div>
                 )}
             </Card>
+            <div className="grid gap-6 lg:grid-cols-2">
+                <CommentsSection incidentId={id} />
+                <TimelineSection incidentId={id} />
+            </div>
         </div>
     );
 }

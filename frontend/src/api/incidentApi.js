@@ -2,7 +2,7 @@ import api from "./axios";
 
 export const getIncidents = async (params) => {
     const response = await api.get("/incidents", { params });
-    return response.data.content;
+    return response.data;
 };
 
 export const getIncident = async (id) => {

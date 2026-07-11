@@ -108,4 +108,23 @@ public class AuthService {
         return response;
     }
 
+    public void forgotPassword(ForgotPasswordRequest request) {
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(()-> new UserNotFoundException());
+        String otp = otpGenerator.generateOtp();
+        PendingRegistration pending = new PendingRegistration(null, user.getEmail(), null, otp, null);
+        pendingRegistrationService.savePasswordReset(pending);
+        mailService.sendOtp(user.getEmail(), otp);
+    }
+
+    public void resetPassword(ResetPasswordRequest request) {
+
+        PendingRegistration pending = pendingRegistrationService.findPasswordResetByEmail(request.getEmail()).orElseThrow(()-> new RegistrationExpiredException());
+        if (!pending.getOtp().equals(request.getOtp())) {
+            throw new InvalidOtpException();
+        }
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(()->new UserNotFoundException());
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+        pendingRegistrationService.deletePasswordReset(request.getEmail());
+    }
 }

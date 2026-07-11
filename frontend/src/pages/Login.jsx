@@ -55,6 +55,9 @@ export default function Login() {
                         {isSubmitting ? "Logging in..." : "Login"}
                     </button>
                 </form>
+                <div className="mt-4 text-center">
+                    <Link to="/forgot-password" className="text-sm text-blue-600 hover:underline">Forgot Password?</Link>
+                </div>
                 <p className="mt-6 text-center">Don't have an account?{" "}
                     <Link to="/register" className="text-blue-600 hover:underline">Register</Link>
                 </p>

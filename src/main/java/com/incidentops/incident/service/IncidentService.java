@@ -1,5 +1,6 @@
 package com.incidentops.incident.service;
 
+import com.incidentops.ai.indexing.IndexingService;
 import com.incidentops.audit.entity.Action;
 import com.incidentops.audit.service.AuditService;
 import com.incidentops.auth.entity.User;
@@ -32,11 +33,13 @@ public class IncidentService {
     private final IncidentRepository incidentRepository;
     private final UserRepository userRepository;
     private final AuditService auditService;
+    private final IndexingService indexingService;
 
-    public IncidentService(IncidentRepository incidentRepository, UserRepository userRepository, AuditService auditService) {
+    public IncidentService(IncidentRepository incidentRepository, UserRepository userRepository, AuditService auditService, IndexingService indexingService) {
         this.incidentRepository = incidentRepository;
         this.userRepository = userRepository;
         this.auditService = auditService;
+        this.indexingService = indexingService;
     }
 
     public IncidentResponse createIncident(CreateIncidentRequest request) {
@@ -52,6 +55,7 @@ public class IncidentService {
             incident.setAssignedTo(assignee);
         }
         Incident savedIncident = incidentRepository.save(incident);
+        indexingService.indexIncident(incident);
         auditService.log(savedIncident, currentUser, Action.INCIDENT_CREATED, "Incident created");
         IncidentResponse mappedResponse = mapToResponse(savedIncident);
         return mappedResponse;
@@ -182,6 +186,9 @@ public class IncidentService {
         if(detailsUpdated){
             auditService.log(incident, currentUser, Action.INCIDENT_UPDATED, "Incident details updated");
         }
-        return mapToResponse(incidentRepository.save(incident));
+        Incident savedIncident = incidentRepository.save(incident);
+        indexingService.indexIncident(savedIncident);
+        return mapToResponse(savedIncident);
+
     }
 }

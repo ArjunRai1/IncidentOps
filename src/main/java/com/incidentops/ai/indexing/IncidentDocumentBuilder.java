@@ -9,12 +9,6 @@ import java.util.Map;
 
 @Component
 public class IncidentDocumentBuilder {
-    private final Incident incident;
-
-    public IncidentDocumentBuilder(Incident incident) {
-        this.incident = incident;
-    }
-
     public Document build(Incident incident) {
         String content = """
         Title: %s

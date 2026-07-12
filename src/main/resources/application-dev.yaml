@@ -38,6 +38,11 @@ spring:
         chat:
           options:
             model: llama-3.3-70b-versatile
+    ollama:
+      base-url: http://localhost:11434
+      embedding:
+        options:
+          model: nomic-embed-text
 
 jwt:
   secret: ${JWT_SECRET}

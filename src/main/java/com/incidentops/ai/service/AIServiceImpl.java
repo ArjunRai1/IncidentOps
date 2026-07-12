@@ -13,10 +13,10 @@ import java.time.LocalDateTime;
 
 
 @Service
-public class GeminiService implements AIService{
+public class AIServiceImpl implements AIService{
     private final AIProperties properties;
     private final ChatModel chatModel;
-    public GeminiService(AIProperties properties, ChatModel chatModel) {
+    public AIServiceImpl(AIProperties properties, ChatModel chatModel) {
         this.properties = properties;
         this.chatModel = chatModel;
     }

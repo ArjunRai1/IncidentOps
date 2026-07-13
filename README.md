@@ -14,6 +14,8 @@ IncidentOps is a production ready full-stack incident management system built us
 - JWT Authentication
 - Spring Data JPA
 - PostgreSQL
+- PgVector
+- Spring AI
 - Redis
 - Flyway
 - Docker
@@ -255,6 +257,7 @@ Dedicated API modules:
 - commentApi
 - timelineApi
 - profileApi
+- aiApi
 
 ---
 
@@ -298,6 +301,7 @@ Implemented reusable components:
 - Card
 - Loader
 - EmptyState
+- Retrieval Pipeline
 
 ---
 
@@ -306,10 +310,13 @@ Implemented reusable components:
 Implemented
 
 - PostgreSQL persistence
+- PgVector
 - Flyway migrations
 - Redis
 - JWT authentication
 - Spring Security
+- Spring AI
+- Ollama
 - Docker Compose
 
 Redis is currently used for:
@@ -328,36 +335,94 @@ Register
 OTP Verification
       │
       ▼
-Login
+    Login
       │
       ▼
-Dashboard
+  Dashboard
       │
       ├──────────────► Profile
       │
       └──────────────► Incidents
                          │
                          ├── View
+                         │      ├── AI Summary
+                         │      ├── Similar Incidents
+                         │      ├── Comments
+                         │      └── Timeline
+                         │
                          ├── Create
-                         ├── Update
-                         ├── Comments
-                         └── Timeline
+                         └── Update
 ```
 
 ---
 
-# Work Remaining
+# AI Module
 
-## AI Module
+IncidentOps now includes a Retrieval-Augmented Generation (RAG) pipeline built using Spring AI, Ollama and PgVector.
 
-Planned:
+## AI Chat
 
-- AI Assistant page
-- RAG Chat interface
-- Integration with Spring AI backend
-- Incident summarization
-- Root cause suggestions
-- Similar incident retrieval
+Implemented:
+
+- Natural language chat interface
+- Retrieval-Augmented Generation (RAG)
+- Semantic search over indexed incidents
+- Context-aware responses using retrieved incidents
+- Hallucination guardrail for unknown queries
+
+Flow:
+
+1. User submits a question.
+2. Relevant incident documents are retrieved from PgVector using vector similarity search.
+3. Retrieved documents are used to build a grounded prompt.
+4. Prompt is sent to the LLM.
+5. AI generates a response using only the retrieved context.
+
+---
+
+## Automatic Incident Indexing
+
+Every newly created incident is automatically indexed.
+
+Flow:
+
+1. Incident is converted into a structured AI document.
+2. Metadata is attached to the document.
+3. Document is split into chunks.
+4. Embeddings are generated using Ollama.
+5. Chunks and embeddings are stored in PgVector.
+
+This keeps the vector database synchronized with the incident database.
+
+---
+
+## Similar Incident Retrieval
+
+Implemented:
+
+- Semantic similarity search
+- Vector search using PgVector
+- Retrieval of related historical incidents
+
+Instead of matching keywords, similar incidents are retrieved based on semantic meaning.
+
+---
+
+## AI Incident Summary
+
+Implemented:
+
+- AI-generated incident summaries
+- Context-aware summarization using similar incidents
+- Grounded responses using retrieved documents only
+
+The generated summary includes:
+
+- What happened
+- Affected component
+- Probable impact
+
+The model does not invent information outside the retrieved context.
 
 ---
 
@@ -411,6 +476,12 @@ Remaining:
 | Filters | ✅ Complete |
 | Sorting | ✅ Complete |
 | Pagination | ✅ Complete |
-| AI Module | ⏳ Planned |
+| AI Chat (RAG) | ✅ Complete |
+| Automatic Incident Indexing | ✅ Complete |
+| Semantic Search | ✅ Complete |
+| Similar Incident Retrieval | ✅ Complete |
+| AI Incident Summary | ✅ Complete |
+| Root Cause Analysis | ⏳ Planned |
+| Resolution Suggestions | ⏳ Planned |
 | Deployment | ⏳ Pending |
 | Final UI Polish | ⏳ Pending |

@@ -48,7 +48,7 @@ public class AIController {
         return ResponseEntity.ok(aiService.getSimilarIncidents(incidentId));
     }
 
-    @PostMapping("/incidents/{incidentId}/summary")
+    @GetMapping("/incidents/{incidentId}/summary")
     public ResponseEntity<SummaryResponse> summarizeIncident(@PathVariable Long incidentId) {
         return ResponseEntity.ok(aiService.summarizeIncident(incidentId));
     }

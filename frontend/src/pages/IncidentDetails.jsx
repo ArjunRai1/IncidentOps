@@ -10,6 +10,9 @@ import Badge from "../components/common/Badge";
 import CommentsSection from "../components/incidents/CommentSection";
 import TimelineSection from "../components/incidents/TimelineSection";
 
+import IncidentSummary from "../components/ai/IncidentSummary";
+import SimilarIncidents from "../components/ai/SimilarIncidents";
+
 import {formatDate, getPriorityVariant, getStatusVariant} from "../utils/formatters";
 
 export default function IncidentDetails() {
@@ -191,6 +194,8 @@ export default function IncidentDetails() {
                     </div>
                 )}
             </Card>
+            <IncidentSummary incidentId={incident.id} />
+            <SimilarIncidents incidentId={incident.id} />
             <div className="grid gap-6 lg:grid-cols-2">
                 <CommentsSection incidentId={id} />
                 <TimelineSection incidentId={id} />

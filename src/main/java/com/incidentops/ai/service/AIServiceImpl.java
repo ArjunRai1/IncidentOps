@@ -4,6 +4,7 @@ import com.incidentops.ai.config.AIProperties;
 import com.incidentops.ai.dto.ChatRequest;
 import com.incidentops.ai.dto.ChatResponse;
 import com.incidentops.ai.dto.SimilarIncidentResponse;
+import com.incidentops.ai.dto.SummaryResponse;
 import com.incidentops.ai.exception.AIException;
 import com.incidentops.ai.indexing.IncidentDocumentBuilder;
 import com.incidentops.ai.prompt.PromptBuilder;
@@ -83,5 +84,17 @@ public class AIServiceImpl implements AIService{
             response.add(similarIncidentResponse);
         }
         return response;
+    }
+
+    public SummaryResponse summarizeIncident(Long incidentId){
+        Incident incident = incidentRepository.findById(incidentId).orElseThrow(IncidentNotFoundException::new);
+        String query = incident.getTitle() + " " + incident.getDescription();
+        List<Document> documents = retrievalService.retrieve(query);
+        String promptText = promptBuilder.buildSummaryPrompt(incident, documents);
+        Prompt prompt = new Prompt(new UserMessage(promptText));
+        SummaryResponse summaryResponse = new SummaryResponse();
+        org.springframework.ai.chat.model.ChatResponse responseFromModel = chatModel.call(prompt);
+        summaryResponse.setSummary(responseFromModel.getResult().getOutput().getText());
+        return summaryResponse;
     }
 }

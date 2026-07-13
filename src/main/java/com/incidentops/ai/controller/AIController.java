@@ -3,6 +3,7 @@ package com.incidentops.ai.controller;
 import com.incidentops.ai.dto.ChatRequest;
 import com.incidentops.ai.dto.ChatResponse;
 import com.incidentops.ai.dto.SimilarIncidentResponse;
+import com.incidentops.ai.dto.SummaryResponse;
 import com.incidentops.ai.indexing.IncidentDocumentBuilder;
 import com.incidentops.ai.retrieval.RetrievalService;
 import com.incidentops.ai.service.AIService;
@@ -45,5 +46,10 @@ public class AIController {
     @GetMapping("/incidents/{incidentId}/similar")
     public ResponseEntity<List<SimilarIncidentResponse>> getSimilarIncidents(@PathVariable Long incidentId) {
         return ResponseEntity.ok(aiService.getSimilarIncidents(incidentId));
+    }
+
+    @PostMapping("/incidents/{incidentId}/summary")
+    public ResponseEntity<SummaryResponse> summarizeIncident(@PathVariable Long incidentId) {
+        return ResponseEntity.ok(aiService.summarizeIncident(incidentId));
     }
 }

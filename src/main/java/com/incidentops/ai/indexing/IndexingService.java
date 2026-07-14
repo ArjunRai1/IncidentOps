@@ -1,23 +1,28 @@
 package com.incidentops.ai.indexing;
+import com.incidentops.ai.repository.VectorStoreRepository;
 import com.incidentops.incident.entity.Incident;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.List;
 @Service
 public class IndexingService {
     private final IncidentDocumentBuilder incidentDocumentBuilder;
     private final ChunkingService chunkingService;
     private final VectorStore vectorStore;
+    private final VectorStoreRepository vectorStoreRepository;
 
-    public IndexingService(IncidentDocumentBuilder incidentDocumentBuilder, ChunkingService chunkingService, VectorStore vectorStore) {
+    public IndexingService(IncidentDocumentBuilder incidentDocumentBuilder, ChunkingService chunkingService, VectorStore vectorStore, VectorStoreRepository vectorStoreRepository) {
         this.incidentDocumentBuilder = incidentDocumentBuilder;
         this.chunkingService = chunkingService;
         this.vectorStore = vectorStore;
+        this.vectorStoreRepository = vectorStoreRepository;
     }
 
-    public void indexIncident(Incident incident){
+    public void indexIncident(Incident incident) throws SQLException {
+        vectorStoreRepository.deleteByIncidentId(incident.getId());
         Document document = incidentDocumentBuilder.build(incident);
         List<Document> chunks = chunkingService.chunking(document);
         vectorStore.add(chunks);

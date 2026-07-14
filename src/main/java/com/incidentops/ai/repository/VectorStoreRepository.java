@@ -1,9 +1,8 @@
 package com.incidentops.ai.repository;
 
-import org.flywaydb.core.internal.jdbc.JdbcTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.SQLException;
 
 @Repository
 public class VectorStoreRepository {
@@ -11,7 +10,7 @@ public class VectorStoreRepository {
     public VectorStoreRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-    public void deleteByIncidentId(Long incidentId) throws SQLException {
+    public void deleteByIncidentId(Long incidentId){
         String sql = """
                 DELETE FROM vector_store
                 WHERE metadata ->> 'incidentId' = ?

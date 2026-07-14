@@ -1,5 +1,6 @@
 package com.incidentops.comment.service;
 
+import com.incidentops.ai.indexing.IndexingService;
 import com.incidentops.audit.entity.Action;
 import com.incidentops.audit.service.AuditService;
 import com.incidentops.auth.entity.User;
@@ -25,12 +26,14 @@ public class CommentService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final AuditService auditService;
+    private final IndexingService indexingService;
 
-    public CommentService(IncidentRepository incidentRepository, UserRepository userRepository, CommentRepository commentRepository, AuditService auditService) {
+    public CommentService(IncidentRepository incidentRepository, UserRepository userRepository, CommentRepository commentRepository, AuditService auditService, IndexingService indexingService) {
         this.incidentRepository = incidentRepository;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
         this.auditService = auditService;
+        this.indexingService = indexingService;
     }
 
     private User getCurrentUser() {
@@ -57,7 +60,9 @@ public class CommentService {
         comment.setIncident(incident);
         comment.setUser(user);
         auditService.log(incident, user, Action.COMMENT_ADDED, "New comment added");
-        return mapToResponse(commentRepository.save(comment));
+        Comment savedComment = commentRepository.save(comment);
+        indexingService.indexIncident(savedComment.getIncident());
+        return mapToResponse(savedComment);
     }
 
     public List<CommentResponse> getComments(Long incidentId, String direction) {

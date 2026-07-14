@@ -24,30 +24,28 @@ public class PromptBuilder {
             """.formatted(context, question);
     }
 
-    public String buildSummaryPrompt(Incident incident, List<Document> documents) {
+    public String buildSummaryPrompt(Document currentIncidentDocument, List<Document> documents){
         String context = documents.stream().map(Document::getText).collect(Collectors.joining("\n\n---\n\n"));
         return """
-            You are an AI summary assistant for IncidentOps.
-            Build an accurate summary using ONLY the current Incident details and retrieved incident documents below.
-            If retrieved documents are empty or not present, respond with current incident details alone.
-            Title:
-            %s
-            Description:
-            %s
-            Status:
-            %s
-            Priority:
-            %s
-            Retrieved Incident Documents:
-            %s
-            Generate a concise technical summary of this incident.
-            Include
-            - what happened
-            - affected component
-            - probable impact
-            Maximum 120 words.
-            Do not invent facts.
-            Summary:
-            """.formatted(incident.getTitle(), incident.getDescription(), incident.getStatus(), incident.getPriority(), context);
+        You are an AI summary assistant for IncidentOps.
+        Build an accurate summary using ONLY the information below.
+        Current Incident:
+        %s
+
+        Similar Incident Context:
+        %s
+
+        Generate a concise technical summary.
+
+        Include:
+        - what happened
+        - affected component
+        - current investigation (if any)
+        - probable impact
+        Maximum 120 words.
+        Do not invent facts.
+        If similar incidents contain conflicting information, prioritize the Current Incident.
+        Summary:
+        """.formatted(currentIncidentDocument.getText(), context);
     }
 }

@@ -4,8 +4,6 @@ import com.incidentops.incident.entity.Incident;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Service;
-
-import java.sql.SQLException;
 import java.util.List;
 @Service
 public class IndexingService {
@@ -21,7 +19,7 @@ public class IndexingService {
         this.vectorStoreRepository = vectorStoreRepository;
     }
 
-    public void indexIncident(Incident incident) throws SQLException {
+    public void indexIncident(Incident incident){
         vectorStoreRepository.deleteByIncidentId(incident.getId());
         Document document = incidentDocumentBuilder.build(incident);
         List<Document> chunks = chunkingService.chunking(document);

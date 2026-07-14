@@ -88,9 +88,10 @@ public class AIServiceImpl implements AIService{
 
     public SummaryResponse summarizeIncident(Long incidentId){
         Incident incident = incidentRepository.findById(incidentId).orElseThrow(IncidentNotFoundException::new);
+        Document currentIncidentDocument = incidentDocumentBuilder.build(incident);
         String query = incident.getTitle() + " " + incident.getDescription();
         List<Document> documents = retrievalService.retrieve(query);
-        String promptText = promptBuilder.buildSummaryPrompt(incident, documents);
+        String promptText = promptBuilder.buildSummaryPrompt(currentIncidentDocument, documents);
         Prompt prompt = new Prompt(new UserMessage(promptText));
         SummaryResponse summaryResponse = new SummaryResponse();
         org.springframework.ai.chat.model.ChatResponse responseFromModel = chatModel.call(prompt);

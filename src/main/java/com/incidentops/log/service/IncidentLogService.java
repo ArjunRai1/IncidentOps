@@ -1,5 +1,6 @@
 package com.incidentops.log.service;
 
+import com.incidentops.ai.indexing.LogIndexingService;
 import com.incidentops.incident.entity.Incident;
 import com.incidentops.incident.exception.IncidentNotFoundException;
 import com.incidentops.incident.repository.IncidentRepository;
@@ -14,11 +15,13 @@ import java.nio.charset.StandardCharsets;
 public class IncidentLogService {
     private final IncidentRepository incidentRepository;
     private final IncidentLogRepository incidentLogRepository;
+    private final LogIndexingService logIndexingService;
 
 
-    public IncidentLogService(IncidentRepository incidentRepository, IncidentLogRepository incidentLogRepository) {
+    public IncidentLogService(IncidentRepository incidentRepository, IncidentLogRepository incidentLogRepository, LogIndexingService logIndexingService) {
         this.incidentRepository = incidentRepository;
         this.incidentLogRepository = incidentLogRepository;
+        this.logIndexingService = logIndexingService;
     }
 
     public LogUploadResponse uploadLog(Long incidentId, MultipartFile file){
@@ -47,9 +50,7 @@ public class IncidentLogService {
         log.setContent(content);
 
         IncidentLog savedLog = incidentLogRepository.save(log);
-
         logIndexingService.indexLog(savedLog);
-
         return new LogUploadResponse(savedLog.getId(), savedLog.getFilename());
     }
 }

@@ -12,5 +12,5 @@ public class IncidentAnalysisResponse {
    private String confidence;
    private List<String> evidence;
    private List<String> immediateActions;
-   private List<String> preventiveRecommendation;
+   private List<String> preventiveRecommendations;
 }

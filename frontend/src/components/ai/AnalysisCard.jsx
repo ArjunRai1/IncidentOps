@@ -15,13 +15,20 @@ export default function AnalysisCard({ analysis, loading }) {
         return null;
     }
 
-    const renderList = (items) => (
-        <ul className="list-disc ml-5 mt-2 space-y-1">
-            {items.map((item, index) => (
-                <li key={index}>{item}</li>
-            ))}
-        </ul>
-    );
+    const renderList = (items = []) => {
+        if(!Array.isArray(items) || items.length === 0){
+            return(
+                <p className="text-gray-500 mt-2">No information available.</p>
+            );
+        }
+        return(
+            <ul className="list-disc ml-5 mt-2 space-y-1">
+                {items.map((item, index) => (
+                    <li key={index}>{item}</li>
+                ))}
+            </ul>
+        );
+    };
 
     return (
         <div className="bg-white rounded-lg shadow p-6 mt-6">

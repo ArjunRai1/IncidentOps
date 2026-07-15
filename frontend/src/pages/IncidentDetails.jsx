@@ -122,6 +122,7 @@ export default function IncidentDetails() {
         try{
             setAnalysisLoading(true);
             const response = await analyzeIncident(id);
+            console.log(response);
             setAnalysis(response);
         } finally{
             setAnalysisLoading(false);
@@ -228,7 +229,6 @@ export default function IncidentDetails() {
             <IncidentSummary incidentId={incident.id} />
             <SimilarIncidents incidentId={incident.id} />
             <LogUpload onUpload={handleLogUpload} />
-            <AnalysisCard analysis={analysis}loading={analysisLoading}/>
             <AnalysisCard analysis={analysis} loading={analysisLoading}/>
             <div className="grid gap-6 lg:grid-cols-2">
                 <CommentsSection incidentId={id} />

@@ -1,7 +1,11 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import { useState } from "react";
+import AIChatButton from "../components/ai/AIChatButton";
+import AIChatDrawer from "../components/ai/AIChatDrawer";
 
 export default function DashboardLayout() {
+    const [chatOpen, setChatOpen] = useState(false);
     const { user, logout } = useAuth();
     const navigate = useNavigate();
     const handleLogout = () => {
@@ -34,6 +38,8 @@ export default function DashboardLayout() {
                     <Outlet />
                 </main>
             </div>
+            <AIChatButton onClick={() => setChatOpen(true)}/>
+            <AIChatDrawer open={chatOpen} onClose={() => setChatOpen(false)}/>
         </div>
     );
 }

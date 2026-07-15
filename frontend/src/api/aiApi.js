@@ -21,3 +21,8 @@ export const uploadLog = async (incidentId, file) => {
     const response = await api.post(`/incidents/${incidentId}/logs`, formData);
     return response.data;
 };
+
+export const chat = async (prompt) => {
+    const response = await api.post("/ai/chat", {prompt});
+    return response.data;
+};

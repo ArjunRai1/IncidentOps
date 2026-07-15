@@ -13,6 +13,9 @@ import TimelineSection from "../components/incidents/TimelineSection";
 import IncidentSummary from "../components/ai/IncidentSummary";
 import SimilarIncidents from "../components/ai/SimilarIncidents";
 
+import AnalysisCard from "../components/ai/AnalysisCard";
+import { analyzeIncident } from "../api/aiApi";
+
 import {formatDate, getPriorityVariant, getStatusVariant} from "../utils/formatters";
 
 export default function IncidentDetails() {
@@ -28,8 +31,20 @@ export default function IncidentDetails() {
     const [editing, setEditing] = useState(false);
     const [error, setError] = useState("");
 
+    const [analysis, setAnalysis] = useState(null);
+    const [analysisLoading, setAnalysisLoading] = useState(false);
+
+    import LogUpload from "../components/ai/LogUpload";
+    import { uploadLog } from "../api/aiApi";
+
     useEffect(() => {
-        loadIncident();
+        const loadData = async () => {
+            await Promise.all([
+                loadIncident(),
+                loadAnalysis()
+            ]);
+        };
+        loadData();
     }, [id]);
 
     const loadIncident = async () => {
@@ -101,6 +116,22 @@ export default function IncidentDetails() {
         });
 
         setEditing(false);
+    };
+
+    const loadAnalysis = async () => {
+        try{
+            setAnalysisLoading(true);
+            const response = await analyzeIncident(id);
+            setAnalysis(response);
+        } finally{
+            setAnalysisLoading(false);
+        }
+    };
+
+    const handleLogUpload = async (file) => {
+        await uploadLog(id, file);
+        await loadAnalysis();
+        await Promise.all([loadSummary(),loadAnalysis()]);
     };
 
     if (loading) {
@@ -196,6 +227,9 @@ export default function IncidentDetails() {
             </Card>
             <IncidentSummary incidentId={incident.id} />
             <SimilarIncidents incidentId={incident.id} />
+            <LogUpload onUpload={handleLogUpload} />
+            <AnalysisCard analysis={analysis}loading={analysisLoading}/>
+            <AnalysisCard analysis={analysis} loading={analysisLoading}/>
             <div className="grid gap-6 lg:grid-cols-2">
                 <CommentsSection incidentId={id} />
                 <TimelineSection incidentId={id} />

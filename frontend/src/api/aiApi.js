@@ -9,3 +9,15 @@ export const getIncidentSummary = async (incidentId) => {
     const response = await api.get(`/ai/incidents/${incidentId}/summary`);
     return response.data;
 };
+
+export const analyzeIncident = async (incidentId) => {
+    const response = await api.post(`/api/v1/ai/incidents/${incidentId}/analysis`);
+    return response.data;
+};
+
+export const uploadLog = async (incidentId, file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const response = await api.post(`/api/v1/incidents/${incidentId}/logs`, formData);
+    return response.data;
+};

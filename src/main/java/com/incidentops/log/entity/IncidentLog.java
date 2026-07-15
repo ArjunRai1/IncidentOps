@@ -12,15 +12,23 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "incident_logs")
 public class IncidentLog {
-    Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "incident_id", nullable = false)
-    Incident incident;
+    private Incident incident;
 
-    String filename;
+    private String filename;
 
-    String content;
+    private String content;
 
-    LocalDateTime uploadedAt;
+    private LocalDateTime uploadedAt;
+
+    @PrePersist
+    public void onCreate(){
+        LocalDateTime now = LocalDateTime.now();
+        uploadedAt = now;
+    }
 }

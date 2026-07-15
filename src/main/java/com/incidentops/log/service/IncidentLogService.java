@@ -7,11 +7,13 @@ import com.incidentops.incident.repository.IncidentRepository;
 import com.incidentops.log.dto.LogUploadResponse;
 import com.incidentops.log.entity.IncidentLog;
 import com.incidentops.log.repository.IncidentLogRepository;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+@Service
 public class IncidentLogService {
     private final IncidentRepository incidentRepository;
     private final IncidentLogRepository incidentLogRepository;

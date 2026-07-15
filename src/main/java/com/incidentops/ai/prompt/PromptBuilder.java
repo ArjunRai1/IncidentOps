@@ -106,6 +106,7 @@ public class PromptBuilder {
                 - If comments are unavailable, rely on logs.
                 - If both are unavailable, use retrieved incidents if relevant.
                 - If evidence is insufficient, explicitly state that.
+                - Try to prefix the evidence with its source (only if possible and available).
                 
                 Return ONLY valid JSON matching this schema.
                 

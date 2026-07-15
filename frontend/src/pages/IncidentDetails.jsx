@@ -16,6 +16,9 @@ import SimilarIncidents from "../components/ai/SimilarIncidents";
 import AnalysisCard from "../components/ai/AnalysisCard";
 import { analyzeIncident } from "../api/aiApi";
 
+import LogUpload from "../components/ai/LogUpload";
+import { uploadLog } from "../api/aiApi";
+
 import {formatDate, getPriorityVariant, getStatusVariant} from "../utils/formatters";
 
 export default function IncidentDetails() {
@@ -33,9 +36,6 @@ export default function IncidentDetails() {
 
     const [analysis, setAnalysis] = useState(null);
     const [analysisLoading, setAnalysisLoading] = useState(false);
-
-    import LogUpload from "../components/ai/LogUpload";
-    import { uploadLog } from "../api/aiApi";
 
     useEffect(() => {
         const loadData = async () => {

@@ -83,10 +83,8 @@ export default function DashboardLayout() {
             </div>
           </header>
 
-          <main className="flex-1 p-8">
-            <Card className="min-h-full rounded-xl border bg-white p-6 shadow-sm">
+          <main className="flex-1 bg-slate-100 p-8">
               <Outlet />
-            </Card>
           </main>
         </div>
       </div>

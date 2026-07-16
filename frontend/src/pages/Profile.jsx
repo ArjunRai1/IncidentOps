@@ -12,6 +12,8 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 
+import ProfileInfoCard from "../components/profile/ProfileInfoCard";
+
 export default function Profile() {
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -55,8 +57,8 @@ export default function Profile() {
 
     return (
         <div className="mx-auto max-w-5xl space-y-8">
-                <PageHeader title="Profile" description="Manage your personal information and account security."/>
-
-        </div>
+            <PageHeader title="Profile" description="Manage your personal information and account security."/>
+            <ProfileInfoCard profile={profile} onProfileUpdated={loadProfile}/>
+         </div>
     );
 }

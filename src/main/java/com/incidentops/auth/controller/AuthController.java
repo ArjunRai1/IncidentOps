@@ -1,8 +1,8 @@
 package com.incidentops.auth.controller;
 
 import com.incidentops.auth.dto.*;
-import com.incidentops.auth.entity.User;
 import com.incidentops.auth.service.AuthService;
+import com.incidentops.profile.dto.UserProfileResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

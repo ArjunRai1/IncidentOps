@@ -1,4 +1,4 @@
-package com.incidentops.auth.dto;
+package com.incidentops.profile.redis;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserProfileResponse {
-    Long id;
-    String email;
-    String role;
+public class PendingPasswordReset {
+    private String email;
+
+    private String hashedPassword;
+
+    private String otp;
 }

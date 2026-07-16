@@ -12,6 +12,7 @@ import com.incidentops.auth.otp.OtpGenerator;
 import com.incidentops.auth.redis.PendingRegistration;
 import com.incidentops.auth.repository.UserRepository;
 import com.incidentops.incident.exception.UserNotFoundException;
+import com.incidentops.profile.dto.UserProfileResponse;
 import com.incidentops.security.JwtService;
 import com.incidentops.security.UserPrincipal;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -103,7 +104,7 @@ public class AuthService {
         UserProfileResponse response = new UserProfileResponse();
         response.setId(user.getId());
         response.setEmail(user.getEmail());
-        response.setRole(user.getRole().name());
+        response.setRole(user.getRole());
 
         return response;
     }

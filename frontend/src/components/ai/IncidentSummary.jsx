@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
+import { Brain, FileText } from "lucide-react";
 import { getIncidentSummary } from "../../api/aiApi";
+
+import { Skeleton } from "../ui/skeleton";
 
 const IncidentSummary = ({ incidentId }) => {
     const [summary, setSummary] = useState("");
@@ -7,7 +10,7 @@ const IncidentSummary = ({ incidentId }) => {
     const [error, setError] = useState("");
 
     useEffect(() => {
-        if(!incidentId){
+        if (!incidentId) {
             return;
         }
 
@@ -15,12 +18,12 @@ const IncidentSummary = ({ incidentId }) => {
             setLoading(true);
             setError("");
 
-            try{
+            try {
                 const response = await getIncidentSummary(incidentId);
                 setSummary(response.summary);
-            } catch (err) {
+            } catch {
                 setError("Unable to generate incident summary.");
-            } finally{
+            } finally {
                 setLoading(false);
             }
         };
@@ -28,27 +31,37 @@ const IncidentSummary = ({ incidentId }) => {
         fetchSummary();
     }, [incidentId]);
 
-    return (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-            <div className="flex items-center gap-2 mb-4">
-                <span className="text-xl">🤖</span>
-                <h2 className="text-lg font-semibold text-gray-900">AI Incident Summary</h2>
+    if (loading) {
+        return (
+            <div className="space-y-3">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-5/6" />
+                    <Skeleton className="h-4 w-3/4" />
             </div>
+        );
+    }
 
-            {loading && (
-                <p className="text-gray-500">Generating summary...</p>
-            )}
-
-            {!loading && error && (
-                <p className="text-red-600">
+    if (error) {
+        return (
+                <div className="rounded-lg border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
                     {error}
-                </p>
-            )}
+                </div>
+        );
+    }
 
-            {!loading && !error && (
-                <p className="text-gray-700 leading-7 whitespace-pre-line">{summary}</p>
-            )}
-        </div>
+    if (!summary?.trim()) {
+        return (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+                    <Brain className="mb-4 h-10 w-10 text-slate-400" />
+                    <h3 className="text-lg font-semibold">No Summary Available</h3>
+                    <p className="mt-2 max-w-md text-sm text-muted-foreground">The AI could not generate a summary for this incident yet.</p>
+                </div>
+        );
+    }
+
+    return (
+        <p className="whitespace-pre-line leading-8 text-slate-700">{summary}</p>
     );
 };
 

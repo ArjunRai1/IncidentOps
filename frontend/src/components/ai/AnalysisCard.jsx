@@ -1,72 +1,108 @@
-import React from "react";
+import {AlertCircle, Brain, CheckCircle2, ShieldCheck, Sparkles} from "lucide-react";
+
+import { Badge } from "../ui/badge";
+import { Skeleton } from "../ui/skeleton";
 
 export default function AnalysisCard({ analysis, loading }) {
-
     if (loading) {
         return (
-            <div className="bg-white rounded-lg shadow p-6 mt-6">
-                <h2 className="text-xl font-semibold mb-4">AI Incident Analysis</h2>
-                <p className="text-gray-500">Generating analysis...</p>
-            </div>
+            <div className="space-y-6">
+                    <Skeleton className="h-20 w-full" />
+                    <div className="space-y-3">
+                        <Skeleton className="h-5 w-40" />
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-5/6" />
+                        <Skeleton className="h-4 w-3/4" />
+                    </div>
+
+                    <div className="space-y-3">
+                        <Skeleton className="h-5 w-48" />
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-5/6" />
+                    </div>
+
+                    <div className="space-y-3">
+                        <Skeleton className="h-5 w-56" />
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-4/5" />
+                    </div>
+                </div>
         );
     }
 
     if (!analysis) {
-        return null;
+        return (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+                    <Brain className="mb-4 h-10 w-10 text-slate-400" />
+                    <h3 className="text-lg font-semibold">No Analysis Available</h3>
+                    <p className="mt-2 max-w-md text-sm text-muted-foreground">Upload logs or wait for AI analysis to generate a root cause and recommendations.</p>
+                </div>
+        );
     }
 
     const renderList = (items = []) => {
-        if(!Array.isArray(items) || items.length === 0){
+        if (!Array.isArray(items) || items.length === 0) {
             return(
-                <p className="text-gray-500 mt-2">No information available.</p>
+                <p className="text-sm text-muted-foreground">No information available.</p>
             );
         }
-        return(
-            <ul className="list-disc ml-5 mt-2 space-y-1">
+
+        return (
+            <ul className="space-y-3">
                 {items.map((item, index) => (
-                    <li key={index}>{item}</li>
+                    <li key={index} className="flex items-start gap-3">
+                        <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
+                        <span className="text-sm leading-6 text-slate-700">{item}</span>
+                    </li>
                 ))}
             </ul>
         );
     };
 
+    const confidenceVariant = {
+        HIGH: "destructive",
+        MEDIUM: "secondary",
+        LOW: "outline",
+    };
+
     return (
-        <div className="bg-white rounded-lg shadow p-6 mt-6">
-            <h2 className="text-xl font-semibold mb-6">AI Incident Analysis</h2>
-            <div className="mb-6">
-                <h3 className="font-semibold">Root Cause</h3>
-                <p className="mt-2 text-gray-700">{analysis.rootCause}</p>
+            <div className="space-y-8">
+                <Badge variant={confidenceVariant[analysis.confidence] ?? "outline"}>
+                    {analysis.confidence} Confidence
+                </Badge>
+
+                <section className="space-y-3">
+                    <div className="flex items-center gap-2">
+                        <AlertCircle className="h-5 w-5 text-red-500" />
+                        <h3 className="font-semibold">Root Cause</h3>
+                    </div>
+
+                    <p className="leading-7 text-slate-700">{analysis.rootCause}</p>
+                </section>
+
+                <section className="space-y-4 border-t pt-6">
+                    <div className="flex items-center gap-2">
+                        <Sparkles className="h-5 w-5 text-amber-500" />
+                        <h3 className="font-semibold">Supporting Evidence</h3>
+                    </div>
+                    {renderList(analysis.evidence)}
+                </section>
+
+                <section className="space-y-4 border-t pt-6">
+                    <div className="flex items-center gap-2">
+                        <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+                        <h3 className="font-semibold">Immediate Actions</h3>
+                    </div>
+                    {renderList(analysis.immediateActions)}
+                </section>
+
+                <section className="space-y-4 border-t pt-6">
+                    <div className="flex items-center gap-2">
+                        <ShieldCheck className="h-5 w-5 text-blue-500" />
+                        <h3 className="font-semibold">Preventive Recommendations</h3>
+                    </div>
+                    {renderList(analysis.preventiveRecommendations)}
+                </section>
             </div>
-
-            <div className="mb-6">
-                <h3 className="font-semibold">Confidence</h3>
-
-                <span className={`inline-block mt-2 px-3 py-1 rounded-full text-sm font-medium ${
-                        analysis.confidence === "HIGH"
-                            ? "bg-red-100 text-red-700"
-                            : analysis.confidence === "MEDIUM"
-                            ? "bg-yellow-100 text-yellow-700"
-                            : "bg-green-100 text-green-700"
-                    }`}>
-                {analysis.confidence}
-                </span>
-            </div>
-
-            <div className="mb-6">
-
-                <h3 className="font-semibold">Evidence</h3>
-                {renderList(analysis.evidence)}
-            </div>
-
-            <div className="mb-6">
-                <h3 className="font-semibold">Immediate Actions</h3>
-                {renderList(analysis.immediateActions)}
-            </div>
-
-            <div>
-                <h3 className="font-semibold">Preventive Recommendations</h3>
-                {renderList(analysis.preventiveRecommendations)}
-            </div>
-        </div>
     );
 }

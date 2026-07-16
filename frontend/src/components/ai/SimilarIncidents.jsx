@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
+import {Clock3, Search} from "lucide-react";
+
 import { getSimilarIncidents } from "../../api/aiApi";
+
+import { Skeleton } from "../ui/skeleton";
+
+import StatusBadge from "../common/StatusBadge";
+import PriorityBadge from "../common/PriorityBadge";
+import { formatDate } from "../../utils/formatters";
 
 const SimilarIncidents = ({ incidentId }) => {
     const [incidents, setIncidents] = useState([]);
@@ -18,7 +26,7 @@ const SimilarIncidents = ({ incidentId }) => {
             try {
                 const response = await getSimilarIncidents(incidentId);
                 setIncidents(response);
-            } catch (err) {
+            } catch{
                 setError("Unable to load similar incidents.");
             } finally {
                 setLoading(false);
@@ -28,36 +36,69 @@ const SimilarIncidents = ({ incidentId }) => {
         fetchSimilarIncidents();
     }, [incidentId]);
 
-    return (
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-            <h2 className="text-lg font-semibold mb-4">Similar Incidents</h2>
-
-            {loading && (
-                <p className="text-gray-500">Finding similar incidents...</p>
-            )}
-
-            {!loading && error && (
-                <p className="text-red-600">{error}</p>
-            )}
-
-            {!loading && !error && incidents.length === 0 && (
-                <p className="text-gray-500">No similar incidents found.</p>
-            )}
-
-            {!loading && !error && incidents.length > 0 && (
-                <div className="space-y-3">
-                    {incidents.map((incident) => (
-                        <div key={incident.id} className="border rounded-md p-4 hover:bg-gray-50 transition-colors">
-                            <h3 className="font-medium text-gray-900">{incident.title}</h3>
-                            <div className="flex gap-4 mt-2 text-sm text-gray-600">
-                                <span>Status: {incident.status}</span>
-                                <span>Priority: {incident.priority}</span>
+    if (loading) {
+        return (
+            <div className="space-y-4">
+                    {[1, 2, 3].map((item) => (
+                        <div key={item} className="space-y-3 rounded-xl border p-5">
+                            <Skeleton className="h-5 w-2/3" />
+                            <div className="flex gap-2">
+                                <Skeleton className="h-6 w-20" />
+                                <Skeleton className="h-6 w-24" />
                             </div>
+                            <Skeleton className="h-4 w-36" />
                         </div>
                     ))}
                 </div>
-            )}
-        </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="rounded-lg border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+                    {error}
+            </div>
+        );
+    }
+
+    if (incidents.length === 0) {
+        return (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                    <Search className="mb-4 h-10 w-10 text-slate-400" />
+                    <h3 className="text-lg font-semibold">No Similar Incidents</h3>
+                    <p className="mt-2 max-w-md text-sm text-muted-foreground">No previously reported incidents closely match this incident.</p>
+                </div>
+            );
+    }
+
+    return (
+        <div className="space-y-4">
+                {incidents.map((incident) => (
+                    <div key={incident.id} className="rounded-xl border transition-colors hover:bg-muted/40">
+                        <div className="space-y-4 p-5">
+                            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                                <div className="min-w-0 flex-1">
+                                    <h3 className="truncate text-base font-semibold">
+                                        {incident.title}
+                                    </h3>
+                                </div>
+
+                                <div className="flex flex-wrap gap-2">
+                                    <StatusBadge status={incident.status} />
+                                    <PriorityBadge priority={incident.priority} />
+                                </div>
+                            </div>
+
+                            {incident.createdAt && (
+                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                    <Clock3 className="h-4 w-4" />
+                                    <span>{formatDate(incident.createdAt)}</span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                ))}
+            </div>
     );
 };
 

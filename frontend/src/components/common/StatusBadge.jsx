@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "../ui/badge";
 
 const variants = {
     OPEN: "bg-blue-100 text-blue-700 hover:bg-blue-100",

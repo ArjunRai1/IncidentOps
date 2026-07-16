@@ -1,25 +1,31 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import {getIncident, updateIncident} from "../api/incidentApi";
 
-import Button from "../components/common/Button";
-import Card from "../components/common/Card";
+import { getIncident, updateIncident } from "../api/incidentApi";
+import { analyzeIncident, uploadLog } from "../api/aiApi";
+
 import Loader from "../components/common/Loader";
-import Badge from "../components/common/Badge";
+import StatusBadge from "../components/common/StatusBadge";
+import PriorityBadge from "../components/common/PriorityBadge";
+
+import PageHeader from "../components/dashboard/PageHeader";
+import SectionCard from "../components/dashboard/SectionCard";
 
 import CommentsSection from "../components/incidents/CommentSection";
 import TimelineSection from "../components/incidents/TimelineSection";
 
 import IncidentSummary from "../components/ai/IncidentSummary";
 import SimilarIncidents from "../components/ai/SimilarIncidents";
-
 import AnalysisCard from "../components/ai/AnalysisCard";
-import { analyzeIncident } from "../api/aiApi";
-
 import LogUpload from "../components/ai/LogUpload";
-import { uploadLog } from "../api/aiApi";
 
-import {formatDate, getPriorityVariant, getStatusVariant} from "../utils/formatters";
+import { Button } from "../components/ui/button";
+import { Card } from "../components/ui/card";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { Textarea } from "../components/ui/textarea";
+
+import { formatDate } from "../utils/formatters";
 
 export default function IncidentDetails() {
     const { id } = useParams();
@@ -32,6 +38,7 @@ export default function IncidentDetails() {
     const [saving, setSaving] = useState(false);
 
     const [editing, setEditing] = useState(false);
+
     const [error, setError] = useState("");
 
     const [analysis, setAnalysis] = useState(null);
@@ -41,9 +48,10 @@ export default function IncidentDetails() {
         const loadData = async () => {
             await Promise.all([
                 loadIncident(),
-                loadAnalysis()
+                loadAnalysis(),
             ]);
         };
+
         loadData();
     }, [id]);
 
@@ -53,9 +61,7 @@ export default function IncidentDetails() {
             setError("");
 
             const data = await getIncident(id);
-
             setIncident(data);
-
             setFormData({
                 title: data.title,
                 description: data.description,
@@ -65,20 +71,31 @@ export default function IncidentDetails() {
         } catch (err) {
             setError(
                 err.response?.data?.message ??
-                "Failed to load incident."
+                    "Failed to load incident."
             );
         } finally {
             setLoading(false);
         }
     };
 
+    const loadAnalysis = async () => {
+        try {
+            setAnalysisLoading(true);
+            const response = await analyzeIncident(id);
+            setAnalysis(response);
+        } finally {
+            setAnalysisLoading(false);
+        }
+    };
+
+    const handleLogUpload = async (file) => {
+        await uploadLog(id, file);
+        await loadAnalysis();
+    };
+
     const handleChange = (event) => {
         const { name, value } = event.target;
-
-        setFormData((previous) => ({
-            ...previous,
-            [name]: value,
-        }));
+        setFormData((previous) => ({...previous,[name]: value}));
     };
 
     const hasChanges =
@@ -92,15 +109,16 @@ export default function IncidentDetails() {
     const handleSave = async () => {
         try {
             setSaving(true);
-
-            const updated = await updateIncident(id, formData);
-
+            const updated = await updateIncident(
+                id,
+                formData
+            );
             setIncident(updated);
             setEditing(false);
         } catch (err) {
             setError(
                 err.response?.data?.message ??
-                "Failed to update incident."
+                    "Failed to update incident."
             );
         } finally {
             setSaving(false);
@@ -118,121 +136,132 @@ export default function IncidentDetails() {
         setEditing(false);
     };
 
-    const loadAnalysis = async () => {
-        try{
-            setAnalysisLoading(true);
-            const response = await analyzeIncident(id);
-            console.log(response);
-            setAnalysis(response);
-        } finally{
-            setAnalysisLoading(false);
-        }
-    };
-
-    const handleLogUpload = async (file) => {
-        await uploadLog(id, file);
-        await loadAnalysis();
-        await Promise.all([loadSummary(),loadAnalysis()]);
-    };
-
     if (loading) {
         return <Loader />;
     }
 
     if (error && !incident) {
         return (
-            <div className="rounded-md border border-red-200 bg-red-50 p-4 text-red-700">
+            <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">
                 {error}
             </div>
         );
     }
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <Button variant="secondary" onClick={() => navigate(-1)}>Back</Button>
+        <div className="mx-auto max-w-7xl space-y-8">
+            <PageHeader title="Incident Details" description="View, manage and investigate this incident."
+                actions={
+                    !editing ? (
+                        <div className="flex gap-3">
+                            <Button variant="outline" onClick={() => navigate(-1)}>Back</Button>
+                            <Button onClick={() => setEditing(true)}>Edit Incident</Button>
+                        </div>
+                    ) : (
+                        <div className="flex gap-3">
+                            <Button variant="outline" onClick={handleCancel}>Cancel</Button>
+                            <Button disabled={!hasChanges} loading={saving} onClick={handleSave}>Save Changes</Button>
+                        </div>
+                    )
+                }
+            />
 
-                {!editing ? (
-                    <Button onClick={() => setEditing(true)}>Edit Incident</Button>
-                ) : (
-                    <div className="flex gap-3">
-                        <Button variant="secondary" onClick={handleCancel}>Cancel</Button>
-                        <Button loading={saving} disabled={!hasChanges} onClick={handleSave}>Save</Button>
-                    </div>
-                )}
-            </div>
             {error && (
-                <div className="rounded-md border border-red-200 bg-red-50 p-4 text-red-700">
+                <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                     {error}
                 </div>
             )}
 
-            <Card>
+            <SectionCard title="Incident Information" description="Core incident information and current status.">
                 {!editing ? (
-                    <>
-                        <div className="flex items-start justify-between">
-                            <div>
-                                <h1 className="text-3xl font-bold">{incident.title}</h1>
-                                <p className="mt-2 text-gray-600">{incident.description}</p>
-                            </div>
-
-                            <div className="flex flex-col gap-2">
-                                <Badge variant={getPriorityVariant(incident.priority)}>
-                                    {incident.priority}
-                                </Badge>
-                                <Badge variant={getStatusVariant(incident.status)}>
-                                    {incident.status}
-                                </Badge>
-                            </div>
+                    <div className="grid gap-8 lg:grid-cols-[2fr_320px]">
+                        <div>
+                            <h1 className="text-3xl font-bold tracking-tight">{incident.title}</h1>
+                            <p className="mt-6 whitespace-pre-wrap leading-7 text-slate-600">{incident.description}</p>
                         </div>
+                        <Card className="rounded-xl border shadow-none">
+                            <div className="space-y-6 p-6">
+                                <div>
+                                    <p className="mb-2 text-sm text-slate-500">Status</p>
+                                    <StatusBadge status={incident.status}/>
+                                </div>
 
-                        <div className="mt-8 grid gap-4 md:grid-cols-2">
-                            <div>
-                                <p className="text-sm font-medium text-gray-500">Created</p>
-                                <p className="mt-1">{formatDate(incident.createdAt)}</p>
+                                <div>
+                                    <p className="mb-2 text-sm text-slate-500">Priority</p>
+                                    <PriorityBadge priority={incident.priority}/>
+                                </div>
+
+                                <div>
+                                    <p className="text-sm text-slate-500">Created</p>
+                                    <p className="mt-1 text-sm font-medium">
+                                        {formatDate(incident.createdAt)}
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                    </>
+                        </Card>
+                    </div>
                 ) : (
                     <div className="space-y-6">
-                        <div>
-                            <label className="mb-1 block text-sm font-medium">Title</label>
-                            <input name="title" value={formData.title} onChange={handleChange}className="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none"/>
+                        <div className="space-y-2">
+                            <Label htmlFor="title">Title</Label>
+                            <Input id="title" name="title" value={formData.title} onChange={handleChange}className="h-11"/>
                         </div>
 
-                        <div>
-                            <label className="mb-1 block text-sm font-medium">Description</label>
-                            <textarea rows={6} name="description" value={formData.description} onChange={handleChange}className="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none"/>
+                        <div className="space-y-2">
+                            <Label htmlFor="description">Description</Label>
+                            <Textarea id="description" name="description" rows={8}
+                                value={
+                                    formData.description
+                                }
+                                onChange={handleChange}
+                            />
                         </div>
 
                         <div className="grid gap-6 md:grid-cols-2">
-                            <div>
-                                <label className="mb-1 block text-sm font-medium">Priority</label>
-                                <select name="priority" value={formData.priority} onChange={handleChange}className="w-full rounded-md border border-gray-300 p-2">
-                                    <option value="LOW">LOW</option>
-                                    <option value="MEDIUM">MEDIUM</option>
-                                    <option value="HIGH">HIGH</option>
+                            <div className="space-y-2">
+                                <Label htmlFor="priority">Priority</Label>
+                                <select id="priority" name="priority" value={formData.priority} onChange={handleChange} className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                                    <option value="LOW">Low</option>
+                                    <option value="MEDIUM">Medium</option>
+                                    <option value="HIGH">High</option>
                                 </select>
                             </div>
-                            <div>
-                                <label className="mb-1 block text-sm font-medium">Status</label>
-                                <select name="status" value={formData.status} onChange={handleChange}className="w-full rounded-md border border-gray-300 p-2">
-                                    <option value="OPEN">OPEN</option>
-                                    <option value="IN_PROGRESS">IN PROGRESS</option>
-                                    <option value="RESOLVED">RESOLVED</option>
+                            <div className="space-y-2">
+                                <Label htmlFor="status">Status</Label>
+                                <select id="status" name="status" value={formData.status} onChange={handleChange} className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                                    <option value="OPEN">Open</option>
+                                    <option value="IN_PROGRESS">In Progress</option>
+                                    <option value="RESOLVED">Resolved</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                 )}
-            </Card>
-            <IncidentSummary incidentId={incident.id} />
-            <SimilarIncidents incidentId={incident.id} />
-            <LogUpload onUpload={handleLogUpload} />
-            <AnalysisCard analysis={analysis} loading={analysisLoading}/>
+            </SectionCard>
+            <SectionCard title="Logs" description="Upload server or application logs for AI analysis.">
+                <LogUpload onUpload={handleLogUpload} />
+            </SectionCard>
+
+            <SectionCard title="AI Summary" description="Automatically generated summary of the incident." >
+                <IncidentSummary incidentId={incident.id}/>
+            </SectionCard>
+
+            <SectionCard title="Root Cause Analysis" description="AI-generated analysis based on incident data and uploaded logs.">
+                <AnalysisCard analysis={analysis} loading={analysisLoading}/>
+            </SectionCard>
+
+            <SectionCard title="Similar Incidents" description="Incidents with related context and symptoms.">
+                <SimilarIncidents incidentId={incident.id}/>
+            </SectionCard>
+
             <div className="grid gap-6 lg:grid-cols-2">
-                <CommentsSection incidentId={id} />
-                <TimelineSection incidentId={id} />
+                <SectionCard title="Comments" description="Discussion related to this incident.">
+                    <CommentsSection incidentId={id}/>
+                </SectionCard>
+
+                <SectionCard title="Timeline" description="Chronological history of incident activity.">
+                    <TimelineSection incidentId={id}/>
+                </SectionCard>
             </div>
         </div>
     );

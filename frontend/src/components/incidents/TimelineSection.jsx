@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { getTimeline } from "../../api/timelineApi";
 
-import Card from "../common/Card";
+import { Card } from "../ui/card";
 import Loader from "../common/Loader";
 import EmptyState from "../common/EmptyState";
 
@@ -37,9 +37,7 @@ export default function TimelineSection({ incidentId }) {
     };
 
     return (
-        <Card>
-
-            <h2 className="mb-6 text-xl font-semibold">Timeline</h2>
+        <div className="space-y-4">
             {loading && <Loader />}
 
             {!loading && error && (
@@ -68,6 +66,6 @@ export default function TimelineSection({ incidentId }) {
                     </Card>
                 ))}
             </div>
-        </Card>
+        </div>
     );
 }

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { getProfile } from "../api/profileApi";
 
-import Card from "../components/common/Card";
+import { Card } from "../components/ui/card";
 import Loader from "../components/common/Loader";
 
 export default function Profile() {

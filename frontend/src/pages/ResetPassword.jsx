@@ -3,8 +3,8 @@ import { useLocation, useNavigate, Navigate } from "react-router-dom";
 
 import { resetPassword } from "../api/authApi";
 
-import Card from "../components/common/Card";
-import Button from "../components/common/Button";
+import { Card } from "../components/ui/card";
+import { Button } from "../components/ui/button";
 
 export default function ResetPassword() {
     const location = useLocation();

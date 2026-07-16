@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 
 import {addComment,getComments} from "../../api/commentApi";
 
-import Card from "../common/Card";
-import Button from "../common/Button";
+import { Card } from "../ui/card";
+import { Button } from "../ui/Button";
 import Loader from "../common/Loader";
 import EmptyState from "../common/EmptyState";
 
@@ -63,8 +63,7 @@ export default function CommentsSection({ incidentId }) {
     };
 
     return (
-        <Card>
-            <h2 className="mb-6 text-xl font-semibold">Comments</h2>
+        <div className="space-y-6">
             <form onSubmit={handleSubmit} className="mb-8 space-y-4">
                 <textarea rows={4} value={comment} onChange={(e) =>setComment(e.target.value)}
                     placeholder="Add a comment..."
@@ -101,6 +100,6 @@ export default function CommentsSection({ incidentId }) {
                     </Card>
                 ))}
             </div>
-        </Card>
+        </div>
     );
 }

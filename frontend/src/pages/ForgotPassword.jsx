@@ -3,8 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { forgotPassword } from "../api/authApi";
 
-import Card from "../components/common/Card";
-import Button from "../components/common/Button";
+import { Card } from "../components/ui/card";
+import { Button } from "../components/ui/button";
 
 export default function ForgotPassword() {
     const navigate = useNavigate();

@@ -4,6 +4,7 @@ import {addComment,getComments} from "../../api/commentApi";
 
 import { Card } from "../ui/card";
 import { Button } from "../ui/Button";
+import { Textarea } from "../ui/textarea";
 import Loader from "../common/Loader";
 import EmptyState from "../common/EmptyState";
 
@@ -64,10 +65,10 @@ export default function CommentsSection({ incidentId }) {
 
     return (
         <div className="space-y-6">
-            <form onSubmit={handleSubmit} className="mb-8 space-y-4">
-                <textarea rows={4} value={comment} onChange={(e) =>setComment(e.target.value)}
+            <form onSubmit={handleSubmit} className="space-y-4">
+                <Textarea rows={4} value={comment} onChange={(e) =>setComment(e.target.value)}
                     placeholder="Add a comment..."
-                    className="w-full rounded-md border border-gray-300 p-3 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="min-h-28 resize-y"
                 />
                 <div className="flex justify-end">
                     <Button type="submit" loading={saving} disabled={!comment.trim()}>Add Comment</Button>
@@ -83,13 +84,15 @@ export default function CommentsSection({ incidentId }) {
             )}
 
             {!loading && !error && comments.length === 0 && (
-                    <EmptyState title="No Comments" message="Be the first to add a comment."/>
+                    <div className="py-8">
+                        <EmptyState title="No Comments" message="Be the first to add a comment."/>
+                    </div>
                 )}
             <div className="space-y-4">
                 {comments.map((item) => (
-                    <Card key={item.id}>
+                    <Card key={item.id} className="rounded-xl border shadow-none p-4">
                         <div className="flex items-center justify-between">
-                            <h3 className="font-semibold">{item.email}</h3>
+                            <h3 className="max-w-[70%] truncate font-semibold">{item.email}</h3>
                             <span className="text-sm text-gray-500">
                                 {formatDate(item.createdAt)}
                             </span>

@@ -49,14 +49,16 @@ export default function TimelineSection({ incidentId }) {
             {!loading &&
                 !error &&
                 events.length === 0 && (
-                    <EmptyState title="No Timeline" message="No activity has been recorded yet."/>
+                    <div className="py-8">
+                        <EmptyState title="No Timeline" message="No activity has been recorded yet."/>
+                    </div>
                 )}
 
             <div className="space-y-4">
 
                 {events.map((event) => (
-                    <Card key={event.id}>
-                        <div className="flex items-center justify-between">
+                    <Card key={event.id} className="rounded-xl border shadow-none p-4">
+                        <div className="flex flex-wrap items-start justify-between gap-3">
                             <span className="font-semibold">{event.eventType}</span>
                             <span className="text-sm text-gray-500">{formatDate(event.createdAt)}</span>
                         </div>

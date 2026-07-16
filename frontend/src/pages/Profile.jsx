@@ -13,6 +13,8 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 
 import ProfileInfoCard from "../components/profile/ProfileInfoCard";
+import PasswordCard from "../components/profile/PasswordCard";
+import EmailCard from "../components/profile/EmailCard";
 
 export default function Profile() {
     const [profile, setProfile] = useState(null);
@@ -59,6 +61,8 @@ export default function Profile() {
         <div className="mx-auto max-w-5xl space-y-8">
             <PageHeader title="Profile" description="Manage your personal information and account security."/>
             <ProfileInfoCard profile={profile} onProfileUpdated={loadProfile}/>
+            <PasswordCard />
+            <EmailCard />
          </div>
     );
 }

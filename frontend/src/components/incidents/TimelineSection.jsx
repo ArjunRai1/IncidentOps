@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { getTimeline } from "../../api/timelineApi";
+import { getTimeline } from "../../api/timeLineApi";
 
 import { Card } from "../ui/card";
 import Loader from "../common/Loader";

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import {addComment,getComments} from "../../api/commentApi";
 
 import { Card } from "../ui/card";
-import { Button } from "../ui/Button";
+import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import Loader from "../common/Loader";
 import EmptyState from "../common/EmptyState";

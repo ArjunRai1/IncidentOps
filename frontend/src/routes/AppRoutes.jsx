@@ -8,7 +8,7 @@ import EditIncident from "../pages/EditIncident";
 import IncidentDetails from "../pages/IncidentDetails";
 import Profile from "../pages/Profile";
 import ProtectedRoute from "./ProtectedRoute";
-import DashboardLayout from "../layouts/DashboardLayout";
+import DashboardLayout from "../layouts/DashBoardLayout";
 import VerifyOtp from "../pages/VerifyOtp";
 import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";

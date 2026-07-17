@@ -9,11 +9,13 @@ import com.incidentops.auth.service.PendingRegistrationService;
 import com.incidentops.incident.exception.UserNotFoundException;
 import com.incidentops.profile.dto.*;
 import com.incidentops.profile.redis.PendingEmailChange;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.incidentops.auth.otp.OtpGenerator;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class ProfileService {
 
@@ -55,6 +57,7 @@ public class ProfileService {
         }
         user.setUsername(request.getUsername());
         userRepository.save(user);
+        log.info("User profile updated");
     }
 
     public void requestPasswordChange(ChangePasswordRequest request){
@@ -70,6 +73,7 @@ public class ProfileService {
         pending.setOtp(otp);
         pendingRegistrationService.savePasswordReset(pending);
         mailService.sendOtp(user.getEmail(), otp);
+        log.info("OTP sent to {} for password change", user.getEmail());
     }
 
     public void verifyPasswordChange(VerifyPasswordChangeRequest request){
@@ -81,6 +85,7 @@ public class ProfileService {
         user.setPassword(pending.getHashedPassword());
         userRepository.save(user);
         pendingRegistrationService.deletePasswordReset(user.getEmail());
+        log.info("Password successfully changed");
     }
 
     public void requestEmailChange(ChangeEmailRequest request){
@@ -96,6 +101,7 @@ public class ProfileService {
         PendingEmailChange pending = new PendingEmailChange(user.getId(), request.getNewEmail(), otp);
         pendingRegistrationService.saveEmailChange(pending);
         mailService.sendOtp(request.getNewEmail(), otp);
+        log.info("OTP sent to {} for email update", request.getNewEmail());
     }
 
     public void verifyEmailChange(VerifyEmailChangeRequest request){
@@ -107,5 +113,6 @@ public class ProfileService {
         user.setEmail(pending.getNewEmail());
         userRepository.save(user);
         pendingRegistrationService.deleteEmailChange(user.getId());
+        log.info("Email changed successfully");
     }
 }

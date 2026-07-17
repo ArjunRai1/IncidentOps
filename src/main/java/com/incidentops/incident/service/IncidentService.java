@@ -16,6 +16,7 @@ import com.incidentops.incident.exception.InvalidStatusTransitionException;
 import com.incidentops.incident.exception.UserNotFoundException;
 import com.incidentops.incident.repository.IncidentRepository;
 import com.incidentops.incident.specification.IncidentSpecification;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.Set;
 
+@Slf4j
 @Service
 public class IncidentService {
     private final IncidentRepository incidentRepository;
@@ -58,6 +60,7 @@ public class IncidentService {
         indexingService.indexIncident(incident);
         auditService.log(savedIncident, currentUser, Action.INCIDENT_CREATED, "Incident created");
         IncidentResponse mappedResponse = mapToResponse(savedIncident);
+        log.info("New Incident created");
         return mappedResponse;
     }
     private User getCurrentUser() {
@@ -188,6 +191,7 @@ public class IncidentService {
         }
         Incident savedIncident = incidentRepository.save(incident);
         indexingService.indexIncident(savedIncident);
+        log.info("Incident updated");
         return mapToResponse(savedIncident);
 
     }

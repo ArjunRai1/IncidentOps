@@ -481,7 +481,7 @@ Remaining:
 | Semantic Search | ✅ Complete |
 | Similar Incident Retrieval | ✅ Complete |
 | AI Incident Summary | ✅ Complete |
-| Root Cause Analysis | ⏳ Planned |
-| Resolution Suggestions | ⏳ Planned |
+| Root Cause Analysis | ✅ Complete |
+| Resolution Suggestions | ✅ Complete |
+| Final UI Polish | ✅ Complete |
 | Deployment | ⏳ Pending |
-| Final UI Polish | ⏳ Pending |

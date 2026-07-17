@@ -61,4 +61,5 @@ incidentops:
 
 logging:
   level:
+    root: INFO
     com.incidentops: DEBUG

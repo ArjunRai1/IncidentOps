@@ -15,6 +15,7 @@ import com.incidentops.incident.exception.UserNotFoundException;
 import com.incidentops.profile.dto.UserProfileResponse;
 import com.incidentops.security.JwtService;
 import com.incidentops.security.UserPrincipal;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,7 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-
+@Slf4j
 @Service
 public class AuthService {
     private final UserRepository userRepository;
@@ -66,6 +67,7 @@ public class AuthService {
         pendingRegistrationService.save(registration);
 
         mailService.sendOtp(registration.getEmail(), registration.getOtp());
+        log.info("OTP sent to {}", registration.getEmail());
 
     }
     public void verifyOtp(VerifyOTPRequest request){
@@ -85,7 +87,7 @@ public class AuthService {
 
         //Delete redis entry immediately
         pendingRegistrationService.delete(request.getEmail());
-        System.out.println("User created successfully");
+        log.info("User created successfully");
     }
 
     public LoginResponse login(LoginRequest request) {
@@ -95,6 +97,7 @@ public class AuthService {
 
         // JWT generation comes next
         String token = jwtService.generateToken(principal);
+        log.info("JWT generated");
         return new LoginResponse(token);
     }
 
@@ -115,6 +118,7 @@ public class AuthService {
         PendingRegistration pending = new PendingRegistration(null, user.getEmail(), null, otp, null);
         pendingRegistrationService.savePasswordReset(pending);
         mailService.sendOtp(user.getEmail(), otp);
+        log.info("OTP sent to {}", user.getEmail());
     }
 
     public void resetPassword(ResetPasswordRequest request) {
@@ -127,5 +131,6 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
         pendingRegistrationService.deletePasswordReset(request.getEmail());
+        log.info("Password reset successful and otp removed from cache");
     }
 }

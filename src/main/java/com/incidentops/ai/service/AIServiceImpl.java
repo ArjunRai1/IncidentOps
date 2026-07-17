@@ -14,6 +14,7 @@ import com.incidentops.incident.exception.IncidentNotFoundException;
 import com.incidentops.incident.repository.IncidentRepository;
 import com.incidentops.log.entity.IncidentLog;
 import com.incidentops.log.repository.IncidentLogRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -25,7 +26,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.*;
 
-
+@Slf4j
 @Service
 public class AIServiceImpl implements AIService{
     private final AIProperties properties;
@@ -60,7 +61,7 @@ public class AIServiceImpl implements AIService{
             org.springframework.ai.chat.model.ChatResponse responseFromModel = chatModel.call(prompt);
             response.setAnswer(responseFromModel.getResult().getOutput().getText());
         } catch(Exception ex) {
-            throw new AIException();
+            log.error("Error in sending ai chat response", ex);
         }
         response.setModel(properties.getModel());
         response.setGeneratedAt(LocalDateTime.now());
@@ -129,7 +130,7 @@ public class AIServiceImpl implements AIService{
             answer = cleanJson(answer);
             return objectMapper.readValue(answer, IncidentAnalysisResponse.class);
         } catch (Exception ex){
-            ex.printStackTrace();
+            log.error("Error in ai incident analysis (RCA)", ex);
             throw new AIException();
         }
     }

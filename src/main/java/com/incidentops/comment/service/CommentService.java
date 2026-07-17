@@ -13,6 +13,7 @@ import com.incidentops.comment.repository.CommentRepository;
 import com.incidentops.incident.entity.Incident;
 import com.incidentops.incident.exception.UserNotFoundException;
 import com.incidentops.incident.repository.IncidentRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class CommentService {
     private final IncidentRepository incidentRepository;
@@ -62,6 +64,7 @@ public class CommentService {
         auditService.log(incident, user, Action.COMMENT_ADDED, "New comment added");
         Comment savedComment = commentRepository.save(comment);
         indexingService.indexIncident(savedComment.getIncident());
+        log.info("New Comment added");
         return mapToResponse(savedComment);
     }
 

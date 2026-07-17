@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
+    url: jdbc:postgresql://host.docker.internal:5433/${POSTGRES_DB}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
 
@@ -13,8 +13,8 @@ spring:
 
   data:
     redis:
-      host: ${REDIS_HOST}
-      port: ${REDIS_PORT:6379}
+      host: host.docker.internal
+      port: 6379
 
   mail:
     host: smtp.gmail.com
@@ -39,6 +39,9 @@ spring:
       embedding:
         enabled: false
 
+    ollama:
+      base-url: http://host.docker.internal:11434
+
     vectorstore:
       pgvector:
         initialize-schema: true
@@ -52,4 +55,3 @@ incidentops:
 logging:
   level:
     root: INFO
-    com.incidentops: INFO

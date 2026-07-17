@@ -13,10 +13,7 @@ IncidentOps is a production ready full-stack incident management system built us
 - Spring Security
 - JWT Authentication
 - Spring Data JPA
-- PostgreSQL
-- PgVector
 - Spring AI
-- Redis
 - Flyway
 - Docker
 
@@ -28,8 +25,29 @@ IncidentOps is a production ready full-stack incident management system built us
 - Axios
 - Tailwind CSS
 - Context API
+  
+## Database
 
+- PostgreSQL
+- Redis
+- PgVector
+
+## AI
+
+- Spring AI
+- Gemini
+- RAG
 ---
+## Highlights
+
+- JWT Authentication with OTP-based email verification
+- Role-Based Access Control (RBAC)
+- Incident lifecycle management
+- AI-powered incident summaries & root cause analysis
+- Semantic search using RAG
+- Dockerized microservice deployment
+- AWS-ready architecture
+
 
 # Features Implemented
 
@@ -86,22 +104,6 @@ Authenticated users can access:
 - Profile
 
 Unauthenticated users are redirected to Login.
-
----
-
-### Current User
-
-Frontend loads the authenticated user using:
-
-```
-GET /api/v1/auth/me
-```
-
-Returned information:
-
-- User ID
-- Email
-- Role
 
 ---
 
@@ -332,26 +334,33 @@ Redis is currently used for:
 Register
       │
       ▼
-OTP Verification
+Email OTP Verification
       │
       ▼
-    Login
+Login
       │
       ▼
-  Dashboard
+JWT Authentication
+      │
+      ▼
+Dashboard
       │
       ├──────────────► Profile
+      │                    │
+      │                    ├── Change Email
+      │                    └── Change Password
       │
       └──────────────► Incidents
-                         │
-                         ├── View
-                         │      ├── AI Summary
-                         │      ├── Similar Incidents
-                         │      ├── Comments
-                         │      └── Timeline
-                         │
-                         ├── Create
-                         └── Update
+                             │
+                             ├── Create
+                             ├── Search
+                             ├── Filter
+                             ├── Update
+                             ├── Comments
+                             ├── Timeline
+                             ├── AI Summary
+                             ├── Similar Incidents
+                             └── AI Chat
 ```
 
 ---
@@ -426,39 +435,23 @@ The model does not invent information outside the retrieved context.
 
 ---
 
-## UI Improvements
+## AI Root Cause Analysis & Resolution Suggestions
 
-Remaining:
+Implemented:
 
-- Status badges
-- Priority badges
-- Consistent spacing
-- Responsive improvements
-- Form consistency
+- AI-generated root cause analysis
+- Context-aware analysis using similar historical incidents
+- Actionable resolution suggestions based on retrieved incidents
+- Grounded responses using retrieved documents only
 
----
+The generated analysis includes:
 
-## Backend Improvements
+-  Probable root cause
+-  Supporting evidence from similar incidents
+-  Recommended resolution steps
+-  Preventive recommendations (when applicable)
 
-Planned:
-
-- Redis caching for incident queries
-- Cache invalidation after updates
-- Role-based UI rendering
-- Additional audit improvements
-
----
-
-## Deployment
-
-Remaining:
-
-- Backend deployment
-- Frontend deployment
-- Production configuration
-- End-to-end testing
-
----
+The model does not invent causes or recommendations outside the retrieved context.
 
 # Project Status
 

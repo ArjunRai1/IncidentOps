@@ -33,6 +33,7 @@ services:
       - incidentops-network
 
   backend:
+    image: incidentops-backend:latest
     build:
       context: .             #Context Defines the path of the structure(folder structure).
       dockerfile: Dockerfile
@@ -52,6 +53,7 @@ services:
       - incidentops-network
 
   frontend:
+    image: incidentops-frontend:latest
     build:
       context: ./frontend
       dockerfile: Dockerfile

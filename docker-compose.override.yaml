@@ -1,0 +1,10 @@
+services:
+  backend:
+    env_file:
+      - .env.local
+  frontend:
+    env_file:
+      - .env.local
+  postgres:
+    env_file:
+      - .env.local

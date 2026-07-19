@@ -1,0 +1,12 @@
+services:
+  backend:
+    env_file:
+      - .env.aws
+    depends_on:
+      - redis
+  frontend:
+    env_file:
+      - .env.aws
+  postgres:
+    profiles:
+      - never

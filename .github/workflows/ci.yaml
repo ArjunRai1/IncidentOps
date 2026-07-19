@@ -27,6 +27,8 @@ jobs:
 
       DB_URL: ${{ secrets.DB_URL }}
 
+      ALLOWED_ORIGINS: ${{ secrets.ALLOWED_ORIGINS }}
+
     services:
       postgres:
         image:  pgvector/pgvector:pg16

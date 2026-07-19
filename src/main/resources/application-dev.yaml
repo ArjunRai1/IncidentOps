@@ -59,6 +59,10 @@ incidentops:
     temperature: 0.3
     max-tokens: 2048
 
+app:
+  cors:
+    allowed-origins: ${ALLOWED_ORIGINS}
+
 logging:
   level:
     root: INFO

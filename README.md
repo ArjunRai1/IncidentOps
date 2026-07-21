@@ -1,7 +1,13 @@
 # IncidentOps
 
-IncidentOps is a production ready full-stack incident management system built using Spring Boot and React. It provides authentication, incident lifecycle management, comments, timeline tracking and lays the foundation for AI-assisted incident analysis.
+![Java](https://img.shields.io/badge/Java-21-orange)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-green)
+![React](https://img.shields.io/badge/React-19-blue)
+![Docker](https://img.shields.io/badge/Docker-Containerized-blue)
+![AWS EC2](https://img.shields.io/badge/Deployed-AWS_EC2-orange)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
+IncidentOps is a production-ready full-stack incident management platform built with Spring Boot and React. It provides secure authentication, complete incident lifecycle management, collaboration through comments and timelines, and AI-powered incident analysis using Retrieval-Augmented Generation (RAG). The application is fully containerized and deployed on AWS, demonstrating a production-oriented architecture.
 ---
 
 # Tech Stack
@@ -45,8 +51,9 @@ IncidentOps is a production ready full-stack incident management system built us
 - Incident lifecycle management
 - AI-powered incident summaries & root cause analysis
 - Semantic search using RAG
-- Dockerized microservice deployment
-- AWS-ready architecture
+- Dockerized deployment using Docker Compose
+- Production deployment on AWS EC2
+- AI-powered incident analysis using RAG
 
 
 # Features Implemented
@@ -328,6 +335,25 @@ Redis is currently used for:
 
 ---
 
+# Deployment
+
+IncidentOps is deployed using a containerized architecture on AWS.
+
+## Infrastructure
+
+- Backend deployed on AWS EC2
+- PostgreSQL running inside Docker
+- Redis running inside Docker
+- Ollama running locally on the EC2 instance for AI inference
+
+## Deployment Workflow
+
+1. Code is pushed to GitHub.
+2. Docker images are built on the EC2 instance.
+3. Docker Compose starts all required services.
+4. AI requests are handled through the local Ollama service.
+
+---
 # Current Application Flow
 
 ```
@@ -371,7 +397,7 @@ IncidentOps now includes a Retrieval-Augmented Generation (RAG) pipeline built u
 
 ## AI Chat
 
-Implemented:
+Capabilities:
 
 - Natural language chat interface
 - Retrieval-Augmented Generation (RAG)
@@ -455,26 +481,27 @@ The model does not invent causes or recommendations outside the retrieved contex
 
 # Project Status
 
-| Module | Status |
-|---------|--------|
-| Authentication | ✅ Complete |
-| Registration OTP | ✅ Complete |
-| Password Reset | ✅ Complete |
-| JWT Authentication | ✅ Complete |
-| Profile | ✅ Complete |
-| Incident CRUD | ✅ Complete |
-| Comments | ✅ Complete |
-| Timeline | ✅ Complete |
-| Search | ✅ Complete |
-| Filters | ✅ Complete |
-| Sorting | ✅ Complete |
-| Pagination | ✅ Complete |
-| AI Chat (RAG) | ✅ Complete |
+| Module                      | Status |
+|-----------------------------|--------|
+| Authentication              | ✅ Complete |
+| Registration OTP            | ✅ Complete |
+| Password Reset              | ✅ Complete |
+| JWT Authentication          | ✅ Complete |
+| Profile                     | ✅ Complete |
+| Incident CRUD               | ✅ Complete |
+| Comments                    | ✅ Complete |
+| Timeline                    | ✅ Complete |
+| Search                      | ✅ Complete |
+| Filters                     | ✅ Complete |
+| Sorting                     | ✅ Complete |
+| Pagination                  | ✅ Complete |
+| AI Chat (RAG)               | ✅ Complete |
 | Automatic Incident Indexing | ✅ Complete |
-| Semantic Search | ✅ Complete |
-| Similar Incident Retrieval | ✅ Complete |
-| AI Incident Summary | ✅ Complete |
-| Root Cause Analysis | ✅ Complete |
-| Resolution Suggestions | ✅ Complete |
-| Final UI Polish | ✅ Complete |
-| Deployment | ⏳ Pending |
+| Semantic Search             | ✅ Complete |
+| Similar Incident Retrieval  | ✅ Complete |
+| AI Incident Summary         | ✅ Complete |
+| Root Cause Analysis         | ✅ Complete |
+| Resolution Suggestions      | ✅ Complete |
+| Final UI Polish             | ✅ Complete |
+| Dockerization               | ✅ Complete |
+| Deployment (AWS EC2)        | ✅ Complete |

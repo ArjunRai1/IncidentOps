@@ -44,6 +44,7 @@ IncidentOps is a production-ready full-stack incident management platform built 
 - Gemini
 - RAG
 ---
+![Dashboard](assets/dashboard.png)
 ## Highlights
 
 - JWT Authentication with OTP-based email verification
@@ -73,6 +74,7 @@ Flow:
 5. OTP is stored in Redis with an expiry.
 6. OTP is emailed to the user.
 7. Frontend redirects to the verification page.
+![Register](assets/register.png)
 
 ---
 
@@ -86,6 +88,7 @@ Flow:
    - User is created in PostgreSQL.
    - Redis entry is removed.
 4. User is redirected to Login.
+![Verification](assets/verifyotp.png)
 
 ---
 
@@ -99,6 +102,7 @@ Flow:
 4. Token is returned to the frontend.
 5. Frontend stores the token.
 6. Every subsequent API request automatically includes the JWT.
+![Login](assets/login.png)
 
 ---
 
@@ -172,6 +176,7 @@ Captured information:
 - Assignee (if provided)
 
 Status is automatically initialized as **OPEN** by the backend.
+![Create_Incident](assets/createincident.png)
 
 ---
 
@@ -187,6 +192,7 @@ Displays complete incident information including:
 - Assignee
 - Created timestamp
 - Updated timestamp
+![IncidentDetails](assets/incidentdetails.png)
 
 ---
 
@@ -234,6 +240,7 @@ Each event contains:
 - Timestamp
 
 Timeline is read-only.
+![Comments/Timeline](assets/commentstimeline.png)
 
 ---
 
@@ -247,11 +254,19 @@ Displays authenticated user's:
 - Email
 - Role
 
+![Profile](assets/profile.png)
+
 Information is retrieved from:
 
 ```
 GET /api/v1/auth/me
 ```
+# Update Profile:
+Implemented
+- User is able to update email address, the OTP is sent to the new email for verification.
+- User is able to update password following OTP verification done through registered email.
+![UpdateProfile](assets/updateprofile.png)
+
 
 ---
 
@@ -412,6 +427,7 @@ Flow:
 3. Retrieved documents are used to build a grounded prompt.
 4. Prompt is sent to the LLM.
 5. AI generates a response using only the retrieved context.
+![AIChat](assets/aichat.png)
 
 ---
 
@@ -440,6 +456,7 @@ Implemented:
 - Retrieval of related historical incidents
 
 Instead of matching keywords, similar incidents are retrieved based on semantic meaning.
+![Similar](assets/similar.png)
 
 ---
 
@@ -458,6 +475,7 @@ The generated summary includes:
 - Probable impact
 
 The model does not invent information outside the retrieved context.
+![AISummary](assets/aisummary.png)
 
 ---
 
@@ -478,6 +496,9 @@ The generated analysis includes:
 -  Preventive recommendations (when applicable)
 
 The model does not invent causes or recommendations outside the retrieved context.
+![RCA](assets/rca.png)
+![RCA2](assets/rca2.png)
+
 
 # Project Status
 

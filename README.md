@@ -161,7 +161,7 @@ Implemented:
 - Error handling
 
 All filtering and sorting are performed by the backend.
-
+![IncidentList](assets/incidentlist.png)
 ---
 
 ## Create Incident
